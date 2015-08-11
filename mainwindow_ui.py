@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Mon Aug 10 13:38:02 2015
+# Created: Tue Aug 11 14:53:20 2015
 #      by: PyQt5 UI code generator 5.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -267,13 +267,13 @@ class Ui_MainWindow(object):
         self.toolBar = QtWidgets.QToolBar(MainWindow)
         self.toolBar.setObjectName("toolBar")
         MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
-        self.actionCalculate = QtWidgets.QAction(MainWindow)
-        self.actionCalculate.setObjectName("actionCalculate")
+        self.actionLoad_Freqlist = QtWidgets.QAction(MainWindow)
+        self.actionLoad_Freqlist.setObjectName("actionLoad_Freqlist")
         self.actionClear_results = QtWidgets.QAction(MainWindow)
         self.actionClear_results.setObjectName("actionClear_results")
         self.actionSave_results = QtWidgets.QAction(MainWindow)
         self.actionSave_results.setObjectName("actionSave_results")
-        self.menuFile.addAction(self.actionCalculate)
+        self.menuFile.addAction(self.actionLoad_Freqlist)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionSave_results)
         self.menuFile.addAction(self.actionClear_results)
@@ -335,7 +335,10 @@ class Ui_MainWindow(object):
         self.label_23.setText(_translate("MainWindow", "Candidate nuclides"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar"))
-        self.actionCalculate.setText(_translate("MainWindow", "Load Freq. List"))
+        self.actionLoad_Freqlist.setText(_translate("MainWindow", "Load Freq. List"))
+        self.actionLoad_Freqlist.setShortcut(_translate("MainWindow", "Ctrl+L"))
         self.actionClear_results.setText(_translate("MainWindow", "Clear results"))
+        self.actionClear_results.setShortcut(_translate("MainWindow", "Ctrl+C"))
         self.actionSave_results.setText(_translate("MainWindow", "Save results"))
+        self.actionSave_results.setShortcut(_translate("MainWindow", "Ctrl+S"))
 

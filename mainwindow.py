@@ -46,7 +46,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
 
         # A particle to begin with
         self.comboBox_name.setCurrentIndex(6)
-        self.re_init_particle()
+        self.reinit_particle()
 
     def connect_signals(self):
         """
@@ -60,6 +60,19 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.pushButton_save.clicked.connect(self.save_file_dialog)
         self.pushButton_calculate.clicked.connect(self.on_pushButton_calculate)
         self.pushButton_table_data.clicked.connect(self.on_pushButton_table_data)
+
+        self.actionClear_results.triggered.connect(self.textBrowser.clear)
+        self.actionSave_results.triggered.connect(self.save_file_dialog)
+        #self.actionLoad_Freqlist.triggered.connect(self.save_file_dialog)
+
+        self.pushButton_nav_n.clicked.connect(self.on_nav_n_pressed)
+        self.pushButton_nav_ne.clicked.connect(self.on_nav_ne_pressed)
+        self.pushButton_nav_e.clicked.connect(self.on_nav_e_pressed)
+        self.pushButton_nav_se.clicked.connect(self.on_nav_se_pressed)
+        self.pushButton_nav_s.clicked.connect(self.on_nav_s_pressed)
+        self.pushButton_nav_sw.clicked.connect(self.on_nav_sw_pressed)
+        self.pushButton_nav_w.clicked.connect(self.on_nav_w_pressed)
+        self.pushButton_nav_nw.clicked.connect(self.on_nav_nw_pressed)
 
         self.spinBox_qq.valueChanged.connect(self.on_spinBox_qq_changed)
         self.spinBox_nn.valueChanged.connect(self.on_spinBox_nn_changed)
@@ -84,15 +97,6 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         """
         self.statusbar.showMessage(message)
 
-    def update_text_browser(self, message):
-        """
-        Implementation of an abstract method:
-        Show text in the text browser
-        :param message:
-        :return:
-        """
-        self.textBrowser.append(message)
-
     def show_message_box(self, text):
         """
         Display a message box.
@@ -114,10 +118,10 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         show isotopes
         :return:
         """
-        self.re_init_particle()
+        self.reinit_particle()
         p_array = self.particle.get_isotopes()
         text = 'Isotopes of {} are:\n'.format(self.particle) + '\n'.join(map(str, p_array)) + '\n'
-        self.update_text_browser(text)
+        self.textBrowser.append(text)
 
     def show_isotones(self):
         """
@@ -125,9 +129,9 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         show isotones
         :return:
         """
-        self.re_init_particle()
+        self.reinit_particle()
         text = 'Isotones of {} are:\n'.format(self.particle) + '\n'.join(map(str, self.particle.get_isotones())) + '\n'
-        self.update_text_browser(text)
+        self.textBrowser.append(text)
 
     def show_isobars(self):
         """
@@ -135,9 +139,9 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         show isobars
         :return:
         """
-        self.re_init_particle()
+        self.reinit_particle()
         text = 'Isobars of {} are:\n'.format(self.particle) + '\n'.join(map(str, self.particle.get_isobars())) + '\n'
-        self.update_text_browser(text)
+        self.textBrowser.append(text)
 
     def save_file_dialog(self):
         """
@@ -182,7 +186,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
             nuclide_validity = False
         return nuclide_validity
 
-    def re_init_particle(self):
+    def reinit_particle(self):
         """
         Re initialize the particle with new values
         :return:
@@ -241,6 +245,8 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         """
         self.spinBox_qq.setMinimum(0)
         self.spinBox_qq.setMaximum(self.ame_data.zz_max)
+        if self.spinBox_qq.value() > self.spinBox_zz.value():
+            self.spinBox_qq.setValue(self.spinBox_zz.value())
         self.check_nuclide_validity()
 
     def on_comboBox_name_changed(self, idx):
@@ -249,8 +255,8 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         :return:
         """
         self.spinBox_zz.setValue(idx)
-        self.spinBox_nn.setValue(idx)
-        self.spinBox_qq.setValue(idx)
+        #self.spinBox_nn.setValue(idx)
+        #self.spinBox_qq.setValue(idx)
 
     def on_pushButton_calculate(self):
         """
@@ -267,7 +273,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         """
         if self.check_nuclide_validity():
             self.show_message('Valid nuclide.')
-            self.update_text_browser('Not implemented yet.')
+            self.textBrowser.append('Calculation not implemented yet.\n')
         else:
             self.show_message('Not a valid nuclide.')
 
@@ -276,61 +282,77 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         SLOT
         :return:
         """
-        self.re_init_particle()
-        self.update_text_browser(self.particle.get_table_data())
+        self.reinit_particle()
+        self.textBrowser.append(self.particle.get_table_data())
 
     def on_nav_n_pressed(self):
         """
         SLOT
         :return:
         """
-        pass
+        zz = self.spinBox_zz.value()
+        self.spinBox_zz.setValue(zz + 1)
 
     def on_nav_ne_pressed(self):
         """
         SLOT
         :return:
         """
-        pass
+        zz = self.spinBox_zz.value()
+        nn = self.spinBox_nn.value()
+        self.spinBox_zz.setValue(zz + 1)
+        self.spinBox_nn.setValue(nn + 1)
 
     def on_nav_e_pressed(self):
         """
         SLOT
         :return:
         """
-        pass
+        nn = self.spinBox_nn.value()
+        self.spinBox_nn.setValue(nn + 1)
 
     def on_nav_se_pressed(self):
         """
         SLOT
         :return:
         """
-        pass
+        zz = self.spinBox_zz.value()
+        nn = self.spinBox_nn.value()
+        self.spinBox_zz.setValue(zz - 1)
+        self.spinBox_nn.setValue(nn + 1)
 
     def on_nav_s_pressed(self):
         """
         SLOT
         :return:
         """
-        pass
+        zz = self.spinBox_zz.value()
+        self.spinBox_zz.setValue(zz - 1)
 
     def on_nav_sw_pressed(self):
         """
         SLOT
         :return:
         """
-        pass
+        zz = self.spinBox_zz.value()
+        nn = self.spinBox_nn.value()
+        self.spinBox_zz.setValue(zz - 1)
+        self.spinBox_nn.setValue(nn - 1)
 
     def on_nav_w_pressed(self):
         """
         SLOT
         :return:
         """
-        pass
+        nn = self.spinBox_nn.value()
+        self.spinBox_nn.setValue(nn - 1)
 
     def on_nav_nw_pressed(self):
         """
         SLOT
         :return:
         """
-        pass
+        zz = self.spinBox_zz.value()
+        nn = self.spinBox_nn.value()
+        self.spinBox_zz.setValue(zz + 1)
+        self.spinBox_nn.setValue(nn - 1)

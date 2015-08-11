@@ -545,7 +545,7 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionCalculate"/>
+    <addaction name="actionLoad_Freqlist"/>
     <addaction name="separator"/>
     <addaction name="actionSave_results"/>
     <addaction name="actionClear_results"/>
@@ -564,19 +564,28 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <action name="actionCalculate">
+  <action name="actionLoad_Freqlist">
    <property name="text">
     <string>Load Freq. List</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
    </property>
   </action>
   <action name="actionClear_results">
    <property name="text">
     <string>Clear results</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
   </action>
   <action name="actionSave_results">
    <property name="text">
     <string>Save results</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>
