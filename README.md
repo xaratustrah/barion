@@ -35,6 +35,45 @@ This program makes NO CLAIMS OF CORRECTNESS OF THE DATA AND CALCULATION VALUES W
 
 ## Running the code
 
-#### Prerequisites
+### Binary releases
+For some versions, binary releases for OSX and Win will be provided on GitHUB.
+An Arch linux package is planned and will be announced.
 
-barion is writen in Python 3.4 so it needs a standard working environment.
+### Build / Run Prerequisites
+
+barion is writen in Python 3.4 so it needs a standard working environment such as Linux, 
+OSX or Windows. It should work out of the box
+with standard linux installations. **barion** needs the library **fortranformat** which can 
+be installed using **pip** pacakge manager. **PyQt5** on the other hand should be installed
+ separately because it contains many binary bindings.
+ 
+ 
+#### OSX and Lin
+
+Under OSX standard macports installation of python 3.4 and also via macports the PyQt5. 
+The rest is obvious. Under linux you should as well be able to use your distribution's
+package manager easily.
+
+#### Win
+
+It is possible to run and even make a binary file using py2exe under Win. I tested this 
+using Win7 64 bit. On a blank Win machine download and install **Python 3.4.0** and 
+**PyQt5.5.0** both x64 versions.
+Note  that version numbers are important, because otherwise they will not match. 
+Using **pip** you should then install
+
+    pip install fortranformat py2exe
+
+then you write
+
+    python setup_win.py py2exe
+    
+then you should get a binary code.
+
+#### Miniconda / Anaconda
+
+Unfortunately PyQt5 is not yet supported in the main channel. But it can be installed from various channels.
+ I have not tested it yet because I couldn't match the versions though. Anyone who makes it
+ please leave a line here for info.
+ 
+ 
