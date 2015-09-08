@@ -64,6 +64,9 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
 
         self.actionClear_results.triggered.connect(self.textBrowser.clear)
         self.actionSave_results.triggered.connect(self.save_file_dialog)
+
+        # Action about and Action quit will be shown differently in OSX
+        
         self.actionAbout.triggered.connect(self.showAboutDialog)
         self.actionQuit.triggered.connect(QCoreApplication.instance().quit)
         # self.actionLoad_Freqlist.triggered.connect(self.save_file_dialog)
