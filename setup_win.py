@@ -9,6 +9,7 @@ Jul 2015 Xaratustrah
 """
 
 from distutils.core import setup
+import py2exe
 
 name = 'barion'
 
