@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Tue Aug 11 14:53:20 2015
+# Created: Tue Sep  8 17:01:57 2015
 #      by: PyQt5 UI code generator 5.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -273,10 +273,18 @@ class Ui_MainWindow(object):
         self.actionClear_results.setObjectName("actionClear_results")
         self.actionSave_results = QtWidgets.QAction(MainWindow)
         self.actionSave_results.setObjectName("actionSave_results")
+        self.actionQuit = QtWidgets.QAction(MainWindow)
+        self.actionQuit.setObjectName("actionQuit")
+        self.actionAbout = QtWidgets.QAction(MainWindow)
+        self.actionAbout.setObjectName("actionAbout")
+        self.menuFile.addAction(self.actionAbout)
+        self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionLoad_Freqlist)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionSave_results)
         self.menuFile.addAction(self.actionClear_results)
+        self.menuFile.addSeparator()
+        self.menuFile.addAction(self.actionQuit)
         self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -341,4 +349,6 @@ class Ui_MainWindow(object):
         self.actionClear_results.setShortcut(_translate("MainWindow", "Ctrl+C"))
         self.actionSave_results.setText(_translate("MainWindow", "Save results"))
         self.actionSave_results.setShortcut(_translate("MainWindow", "Ctrl+S"))
+        self.actionQuit.setText(_translate("MainWindow", "Quit"))
+        self.actionAbout.setText(_translate("MainWindow", "About"))
 

@@ -17,3 +17,4 @@ class Ring(object):
         self.circum = None
         self.mag_rigidity = None
         self.name = ""
+        self.gamma_t = 0

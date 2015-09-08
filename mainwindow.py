@@ -7,11 +7,12 @@ Jul 2015 Xaratustrah
 
 """
 
-from PyQt5.QtWidgets import QMainWindow, QMessageBox, QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QFileDialog, QDialog
 from PyQt5.QtGui import QKeyEvent
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QCoreApplication
 from mainwindow_ui import Ui_MainWindow
 from ui_interface import UI_Interface
+from aboutdialog_ui import Ui_AbooutDialog
 from particle import Particle
 from amedata import AMEData
 import os
@@ -63,7 +64,9 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
 
         self.actionClear_results.triggered.connect(self.textBrowser.clear)
         self.actionSave_results.triggered.connect(self.save_file_dialog)
-        #self.actionLoad_Freqlist.triggered.connect(self.save_file_dialog)
+        self.actionAbout.triggered.connect(self.showAboutDialog)
+        self.actionQuit.triggered.connect(QCoreApplication.instance().quit)
+        # self.actionLoad_Freqlist.triggered.connect(self.save_file_dialog)
 
         self.pushButton_nav_n.clicked.connect(self.on_nav_n_pressed)
         self.pushButton_nav_ne.clicked.connect(self.on_nav_ne_pressed)
@@ -79,6 +82,13 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.spinBox_zz.valueChanged.connect(self.on_spinBox_zz_changed)
 
         self.comboBox_name.currentIndexChanged.connect(self.on_comboBox_name_changed)
+
+    def showAboutDialog(self):
+        about_dialog = QDialog()
+        about_dialog.ui = Ui_AbooutDialog()
+        about_dialog.ui.setupUi(about_dialog)
+        about_dialog.exec_()
+        about_dialog.show()
 
     def make_folders(self):
         """
@@ -255,8 +265,8 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         :return:
         """
         self.spinBox_zz.setValue(idx)
-        #self.spinBox_nn.setValue(idx)
-        #self.spinBox_qq.setValue(idx)
+        # self.spinBox_nn.setValue(idx)
+        # self.spinBox_qq.setValue(idx)
 
     def on_pushButton_calculate(self):
         """
