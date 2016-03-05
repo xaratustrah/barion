@@ -4,6 +4,8 @@ Barion
 -- GUI Application --
 
 Jul 2015 Xaratustrah
+Mar 2016 Xaratustrah
+
 
 """
 
@@ -27,7 +29,7 @@ class Particle(object):
         """
         self.ame_data = ame_data
 
-        # values with tbl are direct readouts form the data file
+        # variables with tbl in the name are direct readouts form the data file
 
         for i in self.ame_data.ame_table:
             if i[4] == zz and i[3] == nn:
@@ -127,44 +129,46 @@ class Particle(object):
     def get_total_charge(qq):
         return qq * Particle.EE
 
-        # def get_total_energy_mev():
-        #     pass
-        #
-        # def get_gamma():
-        #     pass
-        #
-        # def get_beta():
-        #     pass
-        #
-        # def get_relativistic_mass():
-        #     pass
-        #
-        # def get_relativistic_momentum():
-        #     pass
-        #
-        # def get_magnetic_rigidity():
-        #     pass
-        #
-        # def get_electric_rigidity():
-        #     pass
-        #
-        # def get_velocity():
-        #     pass
-        #
-        # def get_revolution_frequency():
-        #     pass
-        #
-        # def get_revolution_harmonic():
-        #     pass
-        #
-        # def get_number_of_ions():
-        #     pass
-        #
-        # def get_atomic_mass_in_u():
-        #     pass
-        #
-        # def get_ionic_mass_in_u():
-        #     pass
-        #
-        # def get_elbien():
-        #     pass
+    @staticmethod
+    def get_total_energy_mev():
+
+         pass
+    #
+    # def get_gamma():
+    #     pass
+    #
+    # def get_beta():
+    #     pass
+    #
+    # def get_relativistic_mass():
+    #     pass
+    #
+    # def get_relativistic_momentum():
+    #     pass
+    #
+    # def get_magnetic_rigidity():
+    #     pass
+    #
+    # def get_electric_rigidity():
+    #     pass
+    #
+    # def get_velocity():
+    #     pass
+    #
+    # def get_revolution_frequency():
+    #     pass
+    #
+    # def get_revolution_harmonic():
+    #     pass
+    #
+    # def get_number_of_ions():
+    #     pass
+    #
+    # def get_atomic_mass_in_u():
+    #     pass
+    #
+    # def get_ionic_mass_in_u():
+    #     pass
+    #
+    # def get_elbien():
+    #     pass

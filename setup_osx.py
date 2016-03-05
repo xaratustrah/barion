@@ -5,12 +5,14 @@ Barion
 -- GUI Application --
 
 Jul 2015 Xaratustrah
+Mar 2016 Xaratustrah
+
 
 """
 
 from setuptools import setup
 
-app=['barion.py']
+app = ['barion.py']
 
 version = '0.0.1'
 

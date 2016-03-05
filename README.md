@@ -1,5 +1,5 @@
 # barion
-<sup> (c) Copyright M. Shahab SANJARI 2015 </sup>
+<sup> (c) Copyright M. Shahab SANJARI 2015-2016 </sup>
 
 ![barion](https://raw.githubusercontent.com/xaratustrah/barion/master/screenshot.png)
 
@@ -7,7 +7,7 @@
 
 **barion** is a set of classes and also a graphical user interface written entirely in Python to access information and perform calculations related to (relativistic or non-relativistic) ions and nuclei. In essence, this program provides a convenient interface to the published data on atomic masses in the world famous  **Atomic Mass Evaluation by G. Audi and colleagues** from [G. Audi et al 2012 Chinese Phys. C 36 1287](http://dx.doi.org/10.1088/1674-1137/36/12/003).
 
- Specifically this program can be used in experiments involving mass and lifetime measurements of radioactive ion beams. It can also be used in a variety of applications such as medical radio therapy, astrophysics and fundamental physics research, etc. One can perform
+  Specifically this program can be used in experiments involving mass and lifetime measurements of radioactive ion beams. It can also be used in a variety of applications such as medical radio therapy, astrophysics and fundamental physics research, etc. One can perform
 
 - Identification of nuclides 
 - Settings of accelerator parameters specially the storage rings
@@ -16,17 +16,17 @@
 
 ## License
 
-barion is free software: you can redistribute it and/or modify it under the 
+**barion** is free software: you can redistribute it and/or modify it under the 
 terms of the GNU General Public License as published by the Free Software 
 Foundation, either version 3 of the License, or (at your option) any later 
 version.
 
-barion is distributed in the hope that it will be useful, but WITHOUT ANY 
+**barion** is distributed in the hope that it will be useful, but WITHOUT ANY 
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
 PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with 
-barion.  If not, see <http://www.gnu.org/licenses/>.
+**barion**.  If not, see <http://www.gnu.org/licenses/>.
 
 The **AME2012 database** is not included with the distribution. It can be downloaded on demand within the software if not available.
 
@@ -41,7 +41,7 @@ An Arch linux package is planned and will be announced.
 
 ### Build / Run Prerequisites
 
-barion is writen in Python 3.4 so it needs a standard working environment such as Linux, 
+**barion** is writen in Python 3.4 so it needs a standard working environment such as Linux, 
 OSX or Windows. It should work out of the box
 with standard linux installations. **barion** needs the library **fortranformat** which can 
 be installed using **pip** pacakge manager. **PyQt5** on the other hand should be installed

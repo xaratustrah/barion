@@ -4,6 +4,8 @@ Barion
 -- GUI Application --
 
 Jul 2015 Xaratustrah
+Mar 2016 Xaratustrah
+
 
 """
 
@@ -67,7 +69,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
 
         # Action about and Action quit will be shown differently in OSX
         
-        self.actionAbout.triggered.connect(self.showAboutDialog)
+        self.actionAbout.triggered.connect(self.show_about_dialog)
         self.actionQuit.triggered.connect(QCoreApplication.instance().quit)
         # self.actionLoad_Freqlist.triggered.connect(self.save_file_dialog)
 
@@ -86,7 +88,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
 
         self.comboBox_name.currentIndexChanged.connect(self.on_comboBox_name_changed)
 
-    def showAboutDialog(self):
+    def show_about_dialog(self):
         about_dialog = QDialog()
         about_dialog.ui = Ui_AbooutDialog()
         about_dialog.ui.setupUi(about_dialog)
