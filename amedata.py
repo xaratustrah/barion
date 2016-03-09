@@ -18,7 +18,6 @@ class AMEData(object):
     """
     Class representing the AME Data
     """
-    AME_DATA_LINK = 'http://amdc.impcas.ac.cn/evaluation/data2012/data/mass.mas12'
 
     def __init__(self, ui_interface):
         """
@@ -118,8 +117,28 @@ class AMEData(object):
         with open(self.home_folder + 'mass.data', 'b+w') as f:
             f.write(g.read())
 
+    # ------------------------------------
+    # static methods
 
-    # Big constant table
+    @staticmethod
+    def to_mev(m_u):
+        return m_u * AMEData.UU
+
+    @staticmethod
+    def to_kg(m_u):
+        return m_u * AMEData.UU * 1.0e6 * AMEData.EE / (AMEData.CC ** AMEData.CC)
+
+    @staticmethod
+    def to_u(m_mev):
+        return m_mev / AMEData.UU
+
+    @staticmethod
+    def get_elbien(zz, qq):
+        return AMEData.ElBiEn[zz][zz - qq]
+
+    # Constants
+
+    AME_DATA_LINK = 'http://amdc.impcas.ac.cn/evaluation/data2012/data/mass.mas12'
 
     #
     # Table of electron binding energies. V.:09.09.2007 (YAL)
@@ -132,7 +151,32 @@ class AMEData(object):
     # D.R. Plante, W.R. Johnson, J. Sapirstein, Phys. Rev. A 49 (1994) 3519.
     #
 
-    # Avoiding numpy array, since py2app receipe has problems importing it
+    CC = 299792458  # m/s
+    UU = 931.4940023  # MeV/C^2
+    EE = 1.602176565e-19  # Coulombs
+    ME = 0.510998928  # MeV/C^2
+
+    # Usage: e.g. show all electron binding energies for 4-Be:
+    #
+    # ElBiEn[4][:4+1]
+    # ---> [0, 218, 372, 389, 397]
+    # This means that the binding energy for
+    # ElBiEn[4][0] i.e. 0-e ion (bare) = 0
+    # ElBiEn[4][1] i.e. 1-e ion (H-like) = 218 eV
+    # ElBiEn[4][2] i.e. 2-e ion (He-like) = 372 eV
+    # ElBiEn[4][3] i.e. 3-e ion (Li-like) = 389 eV
+    # ElBiEn[4][4] i.e. 4-e ion (full atom) = 397 eV
+    #
+    # This table starts at zero/zero to be consistent with programming arrays#
+    # values for H and He are taken from general sources, while being rounded up to integer values
+    #
+    # In order to calculate the ionization energy, subtract levels. e.g.
+    # first ionization energy:
+    # AMEData.ElBiEn[4][4] - AMEData.ElBiEn[4][4-1]
+    # second ionization energy:
+    # AMEData.ElBiEn[4][4-1] - AMEData.ElBiEn[4][4-2]
+
+
     ElBiEn = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

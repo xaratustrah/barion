@@ -9,15 +9,14 @@ Mar 2016 Xaratustrah
 
 """
 
+from amedata import AMEData
+import math
+
 
 class Particle(object):
     """
     Class Particle describes a valid nuclide
     """
-    CC = 299792458  # m/s
-    UU = 931.4940023  # MeV/C^2
-    EE = 1.602176565e-19  # Coulombs
-    ME = 0.510998928  # MeV/C^2
 
     def __init__(self, zz, nn, ame_data):
         """
@@ -27,7 +26,16 @@ class Particle(object):
         :param ame_data: an existing pointer to a table object
         :return:
         """
+
+        # given only values (primary)
         self.ame_data = ame_data
+        self.qq = 0
+
+        # calculated and given values (secondary)
+        self.ke_u = 0.0
+        self.path_length = 0.0
+        self.f_peak = 0.0
+        self.i_beam = 0.0
 
         # variables with tbl in the name are direct readouts form the data file
 
@@ -113,62 +121,75 @@ class Particle(object):
             'Beta Decay Energy [keV]: ' + str(self.tbl_betaen_kev) + ' ± ' + str(self.tbl_betaen_err_kev) + '\n' + \
             'Atomic Mass [uU]: ' + str(self.tbl_am_microu) + ' ± ' + str(self.tbl_am_err_microu) + '\n'
 
-    @staticmethod
-    def to_mev(m_u):
-        return m_u * Particle.UU
+    # --------------------------------
 
-    @staticmethod
-    def to_kg(m_u):
-        return m_u * Particle.UU * 1.0e6 * Particle.EE / (Particle.CC ** Particle.CC)
+    def get_total_charge(self):
+        return self.qq * AMEData.EE
 
-    @staticmethod
-    def to_u(m_mev):
-        return m_mev / Particle.UU
+    def get_atomic_mass_in_u(self):
+        return self.tbl_am_microu / 1e6
 
-    @staticmethod
-    def get_total_charge(qq):
-        return qq * Particle.EE
+    def get_ionic_mass_in_u(self):
+        # note elbien is in eV must convert to MeV
+        if self.tbl_zz <= 100:
+            return self.get_atomic_mass_in_u() + AMEData.to_u(
+                (AMEData.get_elbien(self.tbl_zz, 0) - AMEData.get_elbien(self.tbl_zz,
+                                                                         self.qq)) / 1.0e6 - self.qq * AMEData.ME)
+        else:
+            return self.get_atomic_mass_in_u()
+        pass
 
-    @staticmethod
-    def get_total_energy_mev():
+    # --------------------------------
 
-         pass
-    #
-    # def get_gamma():
-    #     pass
-    #
-    # def get_beta():
-    #     pass
-    #
-    # def get_relativistic_mass():
-    #     pass
-    #
-    # def get_relativistic_momentum():
-    #     pass
-    #
-    # def get_magnetic_rigidity():
-    #     pass
-    #
-    # def get_electric_rigidity():
-    #     pass
-    #
-    # def get_velocity():
-    #     pass
-    #
-    # def get_revolution_frequency():
-    #     pass
-    #
-    # def get_revolution_harmonic():
-    #     pass
-    #
-    # def get_number_of_ions():
-    #     pass
-    #
-    # def get_atomic_mass_in_u():
-    #     pass
-    #
-    # def get_ionic_mass_in_u():
-    #     pass
-    #
-    # def get_elbien():
-    #     pass
+    def get_total_energy_mev(self):
+        return self.ke_u ** self.tbl_aa
+
+    def get_gamma(self):
+        return self.get_total_energy_mev() / AMEData.to_mev(self.get_ionic_mass_in_u()) + 1.0
+
+    # --------------------------------
+
+    def get_beta(self):
+        return math.sqrt(1.0 - 1.0 / math.pow(self.get_gamma(), 2))
+
+    def get_velocity(self):
+        return self.get_beta() * AMEData.CC
+
+    def get_relativistic_mass(self):
+        return AMEData.to_mev(self.get_ionic_mass_in_u()) * self.get_gamma()
+
+    def get_relativistic_momentum(self):
+        return AMEData.to_mev(self.get_ionic_mass_in_u()) * self.get_gamma() * self.get_beta()
+
+    def get_magnetic_rigidity(self):
+        return self.get_relativistic_momentum() * 1.0e6 / self.qq / AMEData.CC
+
+    def get_electric_rigidity(self):
+        return self.get_magnetic_rigidity() * self.get_velocity() / 1.0e3
+
+    # --------------------------------
+
+    def get_revolution_frequency(self):
+        return self.get_velocity() / self.path_length / 1.0e6
+
+    def get_prev_revolution_harmonic(self):
+        return int(self.f_peak / self.get_revolution_frequency())
+
+    def get_nect_revolution_harmonic(self):
+        return int(self.f_peak / self.get_revolution_frequency()) + 1
+
+    def get_number_of_ions(self):
+        return self.i_beam / (self.get_revolution_frequency() * 1.0e6 * self.get_total_charge())
+
+    # --------------------------------
+
+    def calculate_from_energy(self):
+        s = "Given:\n"
+        s += "{} {} {}+\n".format(self.tbl_aa, self.tbl_name, self.qq)
+        s += "z: {}\n".format(self.tbl_zz)
+        s += "n: {}\n\n".format(self.tbl_nn)
+        s += "beta:\t{}\n".format(self.get_beta())
+        s += "gamma:\t{}\n".format(self.get_gamma())
+        #s += "Brho:\t{} [Tm]\n".format(self.get_magnetic_rigidity())
+
+        return s

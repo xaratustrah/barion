@@ -20,3 +20,4 @@ class Ring(object):
         self.mag_rigidity = None
         self.name = ""
         self.gamma_t = 0
+        self.acceptance = 0.0

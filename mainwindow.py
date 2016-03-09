@@ -68,7 +68,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.actionSave_results.triggered.connect(self.save_file_dialog)
 
         # Action about and Action quit will be shown differently in OSX
-        
+
         self.actionAbout.triggered.connect(self.show_about_dialog)
         self.actionQuit.triggered.connect(QCoreApplication.instance().quit)
         # self.actionLoad_Freqlist.triggered.connect(self.save_file_dialog)
@@ -211,6 +211,11 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
             zz = self.spinBox_zz.value()
             nn = self.spinBox_nn.value()
             self.particle = Particle(zz, nn, self.ame_data)
+            self.particle.qq = self.spinBox_qq.value()
+            self.particle.ke_u = self.doubleSpinBox_energy.value()
+            self.particle.path_length = self.doubleSpinBox_path_length.value()
+            self.particle.i_beam = self.doubleSpinBox_beam_current.value()
+            self.particle.f_peak = 0.0
 
     def keyPressEvent(self, event):
         """
@@ -288,7 +293,9 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         """
         if self.check_nuclide_validity():
             self.show_message('Valid nuclide.')
-            self.textBrowser.append('Calculation not implemented yet.\n')
+            # self.textBrowser.append('Calculation not implemented yet.\n')
+            self.reinit_particle()
+            self.textBrowser.append(self.particle.calculate_from_energy())
         else:
             self.show_message('Not a valid nuclide.')
 
