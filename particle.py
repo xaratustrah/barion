@@ -198,6 +198,7 @@ class Particle(object):
 
     def get_next_peak_frequency(self):
         return self.get_next_revolution_harmonic() * self.get_revolution_frequency()
+
     # --------------------------------
 
     def calculate_from_energy(self):
@@ -209,7 +210,6 @@ class Particle(object):
         s += "Beam current:\t{}\t\t[µA]\n".format(self.i_beam_uA)
         s += "Path length:\t\t{}\t\t[m]\n".format(self.path_length_m)
         s += "Analysis freq.:\t{}\t\t[MHz]\n".format(self.f_analysis_mhz)
-
 
         s += "\n"
         s += "Calculated:\n-----------\n"
@@ -248,3 +248,11 @@ class Particle(object):
         s += "Expected peak freq.:\t{}\t[MHz]\n".format(self.get_next_peak_frequency())
 
         return s
+
+    def identify(self, f_actual, f_unknown):
+        max_ee = 5
+        max_aa = 142
+        max_zz = 60
+        #todo:here
+
+        print(f_unknown, f_actual)

@@ -64,6 +64,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.pushButton_save.clicked.connect(self.save_file_dialog)
         self.pushButton_calculate.clicked.connect(self.on_pushButton_calculate)
         self.pushButton_table_data.clicked.connect(self.on_pushButton_table_data)
+        self.pushButton_identify.clicked.connect(self.on_pushButton_identify)
 
         self.actionClear_results.triggered.connect(self.textBrowser.clear)
         self.actionSave_results.triggered.connect(self.save_file_dialog)
@@ -307,6 +308,11 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         """
         self.reinit_particle()
         self.textBrowser.append(self.particle.get_table_data())
+
+    def on_pushButton_identify(self):
+        f_actual = self.doubleSpinBox_f_actual.value()
+        f_unknown = self.doubleSpinBox_f_unknown.value()
+        self.particle.identify(f_actual, f_unknown)
 
     def on_nav_n_pressed(self):
         """
