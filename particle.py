@@ -33,9 +33,9 @@ class Particle(object):
 
         # calculated and given values (secondary)
         self.ke_u = 0.0
-        self.path_length = 0.0
-        self.f_peak = 0.0
-        self.i_beam = 0.0
+        self.path_length_m = 0.0
+        self.f_analysis_mhz = 0.0
+        self.i_beam_uA = 0.0
 
         # variables with tbl in the name are direct readouts form the data file
 
@@ -139,6 +139,9 @@ class Particle(object):
             return self.get_atomic_mass_in_u()
         pass
 
+    def get_ionic_moq(self):
+        return self.get_ionic_mass_in_u() / self.qq
+
     # --------------------------------
 
     def get_total_energy_mev(self):
@@ -151,6 +154,9 @@ class Particle(object):
 
     def get_beta(self):
         return math.sqrt(1.0 - 1.0 / math.pow(self.get_gamma(), 2))
+
+    def get_beta_gamma(self):
+        return self.get_beta() * self.get_gamma()
 
     def get_velocity(self):
         return self.get_beta() * AMEData.CC
@@ -176,34 +182,49 @@ class Particle(object):
     # --------------------------------
 
     def get_revolution_frequency(self):
-        return self.get_velocity() / self.path_length / 1.0e6
-
-    def get_prev_revolution_harmonic(self):
-        return int(self.f_peak / self.get_revolution_frequency())
-
-    def get_next_revolution_harmonic(self):
-        return int(self.f_peak / self.get_revolution_frequency()) + 1
+        return self.get_velocity() / self.path_length_m / 1.0e6
 
     def get_number_of_ions(self):
-        return self.i_beam / (self.get_revolution_frequency() * 1.0e6 * self.get_total_charge())
+        return int(self.i_beam_uA / 1.0e6 / self.get_revolution_frequency() / 1.0e6 / self.get_total_charge())
 
+    def get_prev_revolution_harmonic(self):
+        return int(self.f_analysis_mhz / self.get_revolution_frequency())
+
+    def get_next_revolution_harmonic(self):
+        return int(self.f_analysis_mhz / self.get_revolution_frequency()) + 1
+
+    def get_prev_peak_frequency(self):
+        return self.get_prev_revolution_harmonic() * self.get_revolution_frequency()
+
+    def get_next_peak_frequency(self):
+        return self.get_next_revolution_harmonic() * self.get_revolution_frequency()
     # --------------------------------
 
     def calculate_from_energy(self):
-        s = "Calculation:\n------------\n"
+        s = "Given:\n------\n"
         s += "{} {} {}+\n".format(self.tbl_aa, self.tbl_name, self.qq)
-        s += "z: {}\n".format(self.tbl_zz)
-        s += "n: {}\n\n".format(self.tbl_nn)
+        s += "z= {}, ".format(self.tbl_zz)
+        s += "n= {}\n".format(self.tbl_nn)
+        s += "Kin. Energy:\t\t{}\t\t[MeV/u]\n".format(self.ke_u)
+        s += "Beam current:\t{}\t\t[µA]\n".format(self.i_beam_uA)
+        s += "Path length:\t\t{}\t\t[m]\n".format(self.path_length_m)
+        s += "Analysis freq.:\t{}\t\t[MHz]\n".format(self.f_analysis_mhz)
 
+
+        s += "\n"
+        s += "Calculated:\n-----------\n"
         s += "Total charge:\t\t{}\t[C]\n".format(self.get_total_charge())
 
-        s += "Atom. Mass.:\t\t{}\t\t[u]\n".format(self.get_atomic_mass_in_u())
+        # s += "Atom. Mass.:\t\t{}\t\t[u]\n".format(self.get_atomic_mass_in_u())
 
         s += "Ion. Mass.:\t\t{}\t[u]\n".format(self.get_ionic_mass_in_u())
 
-        s += "Tot. Kin. Energy:\t\t{}\t[MeV]\n".format(self.get_total_energy_mev())
+        s += "m/Q (ionic):\t\t{}\n".format(self.get_ionic_moq())
+
+        s += "Tot. Kin. Energy:\t{}\t\t[MeV]\n".format(self.get_total_energy_mev())
         s += "gamma:\t\t{}\n".format(self.get_gamma())
         s += "beta:\t\t{}\n".format(self.get_beta())
+        s += "beta * gamma:\t{}\n".format(self.get_beta_gamma())
         s += "Velocity:\t\t{}\t[m/s]\n".format(self.get_velocity())
         s += "\t\t{}\t[km/h]\n".format(AMEData.get_kmh(self.get_velocity()))
 
@@ -218,10 +239,12 @@ class Particle(object):
         s += "Brho:\t\t{}\t[T/m]\n".format(self.get_magnetic_rigidity())
         s += "Erho:\t\t{}\t[kV]\n".format(self.get_electric_rigidity())
 
-        s += "f_rev:\t\t{}\t[Hz]\n".format(self.get_revolution_frequency())
-        s += "Prev. Harmonic:\t\t{}\n".format(self.get_prev_revolution_harmonic())
-        s += "Next Harmonic:\t\t{}\n".format(self.get_next_revolution_harmonic())
-
+        s += "f_rev:\t\t{}\t[MHz]\n".format(self.get_revolution_frequency())
         s += "No. of ions:\t\t{}\n".format(self.get_number_of_ions())
+
+        s += "Prev. Harmonic:\t{}\n".format(self.get_prev_revolution_harmonic())
+        s += "Expected peak freq.:\t{}\t[MHz]\n".format(self.get_prev_peak_frequency())
+        s += "Next Harmonic:\t{}\n".format(self.get_next_revolution_harmonic())
+        s += "Expected peak freq.:\t{}\t[MHz]\n".format(self.get_next_peak_frequency())
 
         return s

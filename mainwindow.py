@@ -48,6 +48,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.connect_signals()
 
         # A particle to begin with
+        self.particle = None
         self.comboBox_name.setCurrentIndex(6)
         self.reinit_particle()
 
@@ -213,9 +214,9 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
             self.particle = Particle(zz, nn, self.ame_data)
             self.particle.qq = self.spinBox_qq.value()
             self.particle.ke_u = self.doubleSpinBox_energy.value()
-            self.particle.path_length = self.doubleSpinBox_path_length.value()
-            self.particle.i_beam = self.doubleSpinBox_beam_current.value()
-            self.particle.f_peak = 0.0
+            self.particle.path_length_m = self.doubleSpinBox_path_length.value()
+            self.particle.i_beam_uA = self.doubleSpinBox_beam_current.value()
+            self.particle.f_analysis_mhz = self.doubleSpinBox_f_analysis.value()
 
     def keyPressEvent(self, event):
         """
@@ -226,7 +227,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
             # here accept the event and do something
             if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:  # code enter key
                 # self.do_calculate()
-                self.on_pushButton_table_data()
+                self.on_pushButton_calculate()
                 event.accept()
             if event.key() == Qt.Key_Space:
                 # self.on_pushButton_table_data()
@@ -242,7 +243,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         SLOT
         :return:
         """
-        self.spinBox_zz.setMinimum(0)
+        self.spinBox_zz.setMinimum(1)
         self.spinBox_zz.setMaximum(self.ame_data.zz_max)
         self.comboBox_name.setCurrentIndex(self.spinBox_zz.value())
         if self.spinBox_qq.value() > self.spinBox_zz.value():
@@ -263,7 +264,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         SLOT
         :return:
         """
-        self.spinBox_qq.setMinimum(0)
+        self.spinBox_qq.setMinimum(1)
         self.spinBox_qq.setMaximum(self.ame_data.zz_max)
         if self.spinBox_qq.value() > self.spinBox_zz.value():
             self.spinBox_qq.setValue(self.spinBox_zz.value())
