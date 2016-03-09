@@ -136,6 +136,10 @@ class AMEData(object):
     def get_elbien(zz, qq):
         return AMEData.ElBiEn[zz][zz - qq]
 
+    @staticmethod
+    def get_kmh(mps):
+        return mps*18/5
+
     # Constants
 
     AME_DATA_LINK = 'http://amdc.impcas.ac.cn/evaluation/data2012/data/mass.mas12'

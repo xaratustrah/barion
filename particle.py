@@ -142,7 +142,7 @@ class Particle(object):
     # --------------------------------
 
     def get_total_energy_mev(self):
-        return self.ke_u ** self.tbl_aa
+        return self.ke_u * self.tbl_aa
 
     def get_gamma(self):
         return self.get_total_energy_mev() / AMEData.to_mev(self.get_ionic_mass_in_u()) + 1.0
@@ -161,6 +161,12 @@ class Particle(object):
     def get_relativistic_momentum(self):
         return AMEData.to_mev(self.get_ionic_mass_in_u()) * self.get_gamma() * self.get_beta()
 
+    def get_relativistic_momentum_per_u(self):
+        return self.get_relativistic_momentum() / self.tbl_aa
+
+    def get_pc(self):
+        return self.get_relativistic_momentum() * AMEData.CC
+
     def get_magnetic_rigidity(self):
         return self.get_relativistic_momentum() * 1.0e6 / self.qq / AMEData.CC
 
@@ -175,7 +181,7 @@ class Particle(object):
     def get_prev_revolution_harmonic(self):
         return int(self.f_peak / self.get_revolution_frequency())
 
-    def get_nect_revolution_harmonic(self):
+    def get_next_revolution_harmonic(self):
         return int(self.f_peak / self.get_revolution_frequency()) + 1
 
     def get_number_of_ions(self):
@@ -184,12 +190,38 @@ class Particle(object):
     # --------------------------------
 
     def calculate_from_energy(self):
-        s = "Given:\n"
+        s = "Calculation:\n------------\n"
         s += "{} {} {}+\n".format(self.tbl_aa, self.tbl_name, self.qq)
         s += "z: {}\n".format(self.tbl_zz)
         s += "n: {}\n\n".format(self.tbl_nn)
-        s += "beta:\t{}\n".format(self.get_beta())
-        s += "gamma:\t{}\n".format(self.get_gamma())
-        #s += "Brho:\t{} [Tm]\n".format(self.get_magnetic_rigidity())
+
+        s += "Total charge:\t\t{}\t[C]\n".format(self.get_total_charge())
+
+        s += "Atom. Mass.:\t\t{}\t\t[u]\n".format(self.get_atomic_mass_in_u())
+
+        s += "Ion. Mass.:\t\t{}\t[u]\n".format(self.get_ionic_mass_in_u())
+
+        s += "Tot. Kin. Energy:\t\t{}\t[MeV]\n".format(self.get_total_energy_mev())
+        s += "gamma:\t\t{}\n".format(self.get_gamma())
+        s += "beta:\t\t{}\n".format(self.get_beta())
+        s += "Velocity:\t\t{}\t[m/s]\n".format(self.get_velocity())
+        s += "\t\t{}\t[km/h]\n".format(AMEData.get_kmh(self.get_velocity()))
+
+        s += "Relativistic mass:\t{}\t[MeV/c^2]\n".format(self.get_relativistic_mass())
+        s += "\t\t{}\t[u]\n".format(AMEData.to_u(self.get_relativistic_mass()))
+
+        s += "Rel. momentum:\t{}\t[MeV/c]\n".format(self.get_relativistic_momentum())
+        s += "Rel. mom. per Nuc.:\t{}\t[MeV/c/u]\n".format(self.get_relativistic_momentum_per_u())
+
+        s += "pc:\t\t{}\t[MeV]\n".format(self.get_pc())
+
+        s += "Brho:\t\t{}\t[T/m]\n".format(self.get_magnetic_rigidity())
+        s += "Erho:\t\t{}\t[kV]\n".format(self.get_electric_rigidity())
+
+        s += "f_rev:\t\t{}\t[Hz]\n".format(self.get_revolution_frequency())
+        s += "Prev. Harmonic:\t\t{}\n".format(self.get_prev_revolution_harmonic())
+        s += "Next Harmonic:\t\t{}\n".format(self.get_next_revolution_harmonic())
+
+        s += "No. of ions:\t\t{}\n".format(self.get_number_of_ions())
 
         return s
