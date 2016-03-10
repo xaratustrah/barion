@@ -9,8 +9,8 @@ Mar 2016 Xaratustrah
 
 """
 
-from PyQt5.QtWidgets import QMainWindow, QMessageBox, QFileDialog, QDialog
-from PyQt5.QtGui import QKeyEvent
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QFileDialog, QDialog, QTableWidgetItem
+from PyQt5.QtGui import QKeyEvent, QStandardItemModel, QStandardItem
 from PyQt5.QtCore import Qt, QCoreApplication
 from mainwindow_ui import Ui_MainWindow
 from ui_interface import UI_Interface
@@ -47,6 +47,14 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         # UI related stuff
         self.connect_signals()
 
+        # setup table view
+        self.tableView_model = QStandardItemModel(40, 3)
+        self.tableView_model.setHorizontalHeaderItem(0, QStandardItem('Name'))
+        self.tableView_model.setHorizontalHeaderItem(1, QStandardItem('Value'))
+        self.tableView_model.setHorizontalHeaderItem(2, QStandardItem('Unit'))
+        self.tableView.verticalHeader().setVisible(False)
+        self.tableView.setModel(self.tableView_model)
+
         # A particle to begin with
         self.particle = None
         self.comboBox_name.setCurrentIndex(6)
@@ -57,7 +65,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         Connects signals.
         :return:
         """
-        self.pushButton_clear.clicked.connect(self.textBrowser.clear)
+        self.pushButton_clear.clicked.connect(self.on_pushButton_clear)
         self.pushButton_isotopes.clicked.connect(self.show_isotopes)
         self.pushButton_isotones.clicked.connect(self.show_isotones)
         self.pushButton_isobars.clicked.connect(self.show_isobars)
@@ -66,7 +74,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.pushButton_table_data.clicked.connect(self.on_pushButton_table_data)
         self.pushButton_identify.clicked.connect(self.on_pushButton_identify)
 
-        self.actionClear_results.triggered.connect(self.textBrowser.clear)
+        self.actionClear_results.triggered.connect(self.on_pushButton_clear)
         self.actionSave_results.triggered.connect(self.save_file_dialog)
 
         # Action about and Action quit will be shown differently in OSX
@@ -287,6 +295,10 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         """
         self.do_calculate()
 
+    def on_pushButton_clear(self):
+        self.textBrowser.clear()
+        self.tableView_model.clear()
+
     def do_calculate(self):
         """
         SLOT
@@ -295,9 +307,9 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         """
         if self.check_nuclide_validity():
             self.show_message('Valid nuclide.')
-            # self.textBrowser.append('Calculation not implemented yet.\n')
             self.reinit_particle()
-            self.textBrowser.append(self.particle.calculate_from_energy())
+            self.update_table_view()
+            #self.textBrowser.append(self.particle.calculate_from_energy())
         else:
             self.show_message('Not a valid nuclide.')
 
@@ -385,3 +397,11 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         nn = self.spinBox_nn.value()
         self.spinBox_zz.setValue(zz + 1)
         self.spinBox_nn.setValue(nn - 1)
+
+    def update_table_view(self):
+        lst = self.particle.calculate_from_energy_list()
+        for i in range(len(lst)):
+            for j in range(len(lst[0])):
+                item = QStandardItem(lst[i][j])
+                self.tableView_model.setItem(i, j, item)
+        self.tableView.resizeColumnsToContents()

@@ -249,10 +249,44 @@ class Particle(object):
 
         return s
 
+    def calculate_from_energy_list(self):
+
+        s = [['Name:', "{} {} {}+".format(self.tbl_aa, self.tbl_name, self.qq), ''],
+             ["Z:", str(self.tbl_zz), ''],
+             ['N:', str(self.tbl_nn), ''],
+             ['Kinetic energy:', str(self.ke_u), '[MeV/u]'],
+             ['Beam current:', str(self.i_beam_uA), '[µA]'],
+             ['Path length:', str(self.path_length_m), '[m]'],
+             ['Analysis freq.:', str(self.f_analysis_mhz), '[MHz]'],
+             ['Total charge:', str(self.get_total_charge()), '[C]'],
+             ['Atomic mass:', str(self.get_atomic_mass_in_u()), '[u]'],
+             ['Ionic mass:', str(self.get_ionic_mass_in_u()), '[u]'],
+             ['Ionic m/Q:', str(self.get_ionic_moq()), '[u]'],
+             ['Tot. kin. Energy:', str(self.get_total_energy_mev()), '[MeV]'],
+             ['gamma:', str(self.get_gamma()), ''],
+             ['beta:', str(self.get_beta()), ''], ['beta * gamma:', str(self.get_beta_gamma()), ''],
+             ['Velocity:', str(self.get_velocity()), '[m/s]'],
+             ['', str(AMEData.get_kmh(self.get_velocity())), '[km/h]'],
+             ['Rel. mass:', str(self.get_relativistic_mass()), '[MeV/c^2]'],
+             ['', str(AMEData.to_u(self.get_relativistic_mass())), '[u]'],
+             # ['', str(AMEData.to_kg(self.get_relativistic_mass())), '[kg]'],
+             ['Rel. Momentum:', str(self.get_relativistic_momentum()), '[MeV/c]'],
+             ['Rel. Mom. per Nucl.:', str(self.get_relativistic_momentum_per_u()), '[MeV/c/u]'],
+             ['pc:', str(self.get_pc()), '[MeV]'], ['Brho:', str(self.get_magnetic_rigidity()), '[T/m]'],
+             ['Erho:', str(self.get_electric_rigidity()), '[kV]'],
+             ['f_rev:', str(self.get_revolution_frequency()), '[MHz]'],
+             ['No. of ions:', str(self.get_number_of_ions()), ''],
+             ['Prev. harmonic:', str(self.get_prev_revolution_harmonic()), ''],
+             ['Expected peak:', str(self.get_prev_peak_frequency()), '[MHz]'],
+             ['Next harmonic:', str(self.get_next_revolution_harmonic()), ''],
+             ['Expected peak:', str(self.get_next_peak_frequency()), '[MHz]']]
+
+        return s
+
     def identify(self, f_actual, f_unknown):
         max_ee = 5
         max_aa = 142
         max_zz = 60
-        #todo:here
+        # todo:here
 
         print(f_unknown, f_actual)
