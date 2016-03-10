@@ -126,7 +126,7 @@ class AMEData(object):
 
     @staticmethod
     def to_kg(m_u):
-        return m_u * AMEData.UU * 1.0e6 * AMEData.EE / (AMEData.CC ** AMEData.CC)
+        return m_u * AMEData.UU * 1.0e6 * AMEData.EE / (AMEData.CC ** 2)
 
     @staticmethod
     def to_u(m_mev):

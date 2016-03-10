@@ -242,33 +242,7 @@
             </widget>
            </item>
            <item row="4" column="1">
-            <widget class="QComboBox" name="comboBox_ring">
-             <item>
-              <property name="text">
-               <string>ESR</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>CRYRING</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>CR</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>CSRe</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>RIRING</string>
-              </property>
-             </item>
-            </widget>
+            <widget class="QComboBox" name="comboBox_ring"/>
            </item>
            <item row="0" column="1">
             <widget class="QDoubleSpinBox" name="doubleSpinBox_energy">
@@ -344,7 +318,7 @@
               <double>0.000100000000000</double>
              </property>
              <property name="value">
-              <double>108.500000000000000</double>
+              <double>100.000000000000000</double>
              </property>
             </widget>
            </item>

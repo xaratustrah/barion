@@ -18,7 +18,7 @@ class Particle(object):
     Class Particle describes a valid nuclide
     """
 
-    def __init__(self, zz, nn, ame_data):
+    def __init__(self, zz, nn, ame_data, ring):
         """
         Constructor of the class
         :param zz: proton number
@@ -29,6 +29,7 @@ class Particle(object):
 
         # given only values (primary)
         self.ame_data = ame_data
+        self.ring = ring
         self.qq = 0
 
         # calculated and given values (secondary)
@@ -251,7 +252,7 @@ class Particle(object):
 
     def calculate_from_energy_list(self):
 
-        s = [['Name:', "{} {} {}+".format(self.tbl_aa, self.tbl_name, self.qq), ''],
+        s = [['Nuclide:', "{} {} {}+".format(self.tbl_aa, self.tbl_name, self.qq), ''],
              ["Z:", str(self.tbl_zz), ''],
              ['N:', str(self.tbl_nn), ''],
              ['Kinetic energy:', str(self.ke_u), '[MeV/u]'],
@@ -269,7 +270,7 @@ class Particle(object):
              ['', str(AMEData.get_kmh(self.get_velocity())), '[km/h]'],
              ['Rel. mass:', str(self.get_relativistic_mass()), '[MeV/c^2]'],
              ['', str(AMEData.to_u(self.get_relativistic_mass())), '[u]'],
-             # ['', str(AMEData.to_kg(self.get_relativistic_mass())), '[kg]'],
+             ['', str(AMEData.to_kg(self.get_relativistic_mass())), '[kg]'],
              ['Rel. Momentum:', str(self.get_relativistic_momentum()), '[MeV/c]'],
              ['Rel. Mom. per Nucl.:', str(self.get_relativistic_momentum_per_u()), '[MeV/c/u]'],
              ['pc:', str(self.get_pc()), '[MeV]'], ['Brho:', str(self.get_magnetic_rigidity()), '[T/m]'],
@@ -288,5 +289,11 @@ class Particle(object):
         max_aa = 142
         max_zz = 60
         # todo:here
+        alpha_p = self.ring.get_alpha_p()
+        delta_f = f_actual - f_unknown
+        delta_moq = delta_f / alpha_p * self.get_ionic_moq()
+        s = "Ring: ESR\n"
+        s += "delta_moq: {}\n".format(delta_moq)
+        s += 'moq of unknown particle:{}\n'.format(self.get_ionic_moq() + delta_moq)
 
-        print(f_unknown, f_actual)
+        return s

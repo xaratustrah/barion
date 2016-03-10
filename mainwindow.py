@@ -17,6 +17,7 @@ from ui_interface import UI_Interface
 from aboutdialog_ui import Ui_AbooutDialog
 from particle import Particle
 from amedata import AMEData
+from ring import Ring
 import os
 
 
@@ -37,6 +38,9 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         # set home folders
         self.home_folder = os.path.expanduser('~') + '/.barion/'
         self.make_folders()
+
+        # create storage rings
+        self.generate_rings()
 
         # create an instance of the table data and give yourself as UI Interface
         self.ame_data = AMEData(self)
@@ -59,6 +63,13 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.particle = None
         self.comboBox_name.setCurrentIndex(6)
         self.reinit_particle()
+
+    def generate_rings(self):
+        self.ring = Ring('ESR', 108.5)
+        self.ring.acceptance = 0.024
+        self.ring.gamma_t = 1.23
+        self.ring.mag_rigidity = 18
+        self.comboBox_ring.addItems([self.ring.name])
 
     def connect_signals(self):
         """
@@ -220,7 +231,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
             # Here make a particle
             zz = self.spinBox_zz.value()
             nn = self.spinBox_nn.value()
-            self.particle = Particle(zz, nn, self.ame_data)
+            self.particle = Particle(zz, nn, self.ame_data, self.ring)
             self.particle.qq = self.spinBox_qq.value()
             self.particle.ke_u = self.doubleSpinBox_energy.value()
             self.particle.path_length_m = self.doubleSpinBox_path_length.value()
@@ -309,7 +320,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
             self.show_message('Valid nuclide.')
             self.reinit_particle()
             self.update_table_view()
-            #self.textBrowser.append(self.particle.calculate_from_energy())
+            # self.textBrowser.append(self.particle.calculate_from_energy())
         else:
             self.show_message('Not a valid nuclide.')
 
@@ -324,7 +335,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
     def on_pushButton_identify(self):
         f_actual = self.doubleSpinBox_f_actual.value()
         f_unknown = self.doubleSpinBox_f_unknown.value()
-        self.particle.identify(f_actual, f_unknown)
+        self.textBrowser.append(self.particle.identify(f_actual, f_unknown))
 
     def on_nav_n_pressed(self):
         """
