@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1069</width>
-    <height>742</height>
+    <width>998</width>
+    <height>741</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>barion</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_4">
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
+     <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
+       <layout class="QGridLayout" name="gridLayout_7">
+        <item row="0" column="0" rowspan="2">
          <widget class="QGroupBox" name="groupBox">
           <property name="title">
            <string>Navigation</string>
@@ -172,77 +172,28 @@
           </layout>
          </widget>
         </item>
-        <item>
+        <item row="0" column="1">
          <widget class="QGroupBox" name="groupBox_2">
           <property name="title">
            <string>Parameters</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="6" column="2">
-            <widget class="QLabel" name="label_13">
-             <property name="text">
-              <string>MHz</string>
-             </property>
-            </widget>
-           </item>
-           <item row="9" column="2">
-            <widget class="QLabel" name="label_15">
-             <property name="text">
-              <string>MHz</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="2">
-            <widget class="QLabel" name="label_9">
-             <property name="text">
-              <string>µA</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="2">
-            <widget class="QLabel" name="label_18">
-             <property name="text">
-              <string>m</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="2">
-            <widget class="QCheckBox" name="checkBox_circum">
-             <property name="text">
-              <string>Use circum.</string>
-             </property>
-            </widget>
-           </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_10">
              <property name="text">
-              <string>Analysis Freq.</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QLabel" name="label_7">
-             <property name="text">
-              <string>MeV/u</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_4">
-             <property name="text">
-              <string>Energy:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QLabel" name="label_11">
-             <property name="text">
-              <string>MHz</string>
+              <string>Analysis Freq. [MHz]:</string>
              </property>
             </widget>
            </item>
            <item row="4" column="1">
             <widget class="QComboBox" name="comboBox_ring"/>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>Energy [MeV/u]:</string>
+             </property>
+            </widget>
            </item>
            <item row="0" column="1">
             <widget class="QDoubleSpinBox" name="doubleSpinBox_energy">
@@ -270,12 +221,15 @@
            <item row="2" column="0">
             <widget class="QLabel" name="label_8">
              <property name="text">
-              <string>Beam Current:</string>
+              <string>Beam Current [µA]:</string>
              </property>
             </widget>
            </item>
            <item row="3" column="1">
             <widget class="QDoubleSpinBox" name="doubleSpinBox_path_length">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="decimals">
               <number>3</number>
              </property>
@@ -292,15 +246,11 @@
            </item>
            <item row="3" column="0">
             <widget class="QLabel" name="label_19">
-             <property name="text">
-              <string>Path length:</string>
+             <property name="enabled">
+              <bool>false</bool>
              </property>
-            </widget>
-           </item>
-           <item row="9" column="0">
-            <widget class="QLabel" name="label_14">
              <property name="text">
-              <string>Unknown particle:</string>
+              <string>Path length [m]:</string>
              </property>
             </widget>
            </item>
@@ -317,13 +267,6 @@
              </property>
              <property name="value">
               <double>245.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="label_12">
-             <property name="text">
-              <string>Actual Freq.</string>
              </property>
             </widget>
            </item>
@@ -344,17 +287,174 @@
             </widget>
            </item>
            <item row="5" column="1">
-            <widget class="Line" name="line">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+            <widget class="QCheckBox" name="checkBox_circum">
+             <property name="text">
+              <string>Use circum.</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="6" column="1">
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="1" rowspan="2">
+         <widget class="QGroupBox" name="groupBox_6">
+          <property name="title">
+           <string>Identification</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_5">
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_23">
+             <property name="text">
+              <string>P range ±:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QSpinBox" name="spinBox_range_zz">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>150</number>
+             </property>
+             <property name="value">
+              <number>4</number>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_24">
+             <property name="text">
+              <string>N range ±:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QSpinBox" name="spinBox_range_nn">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>150</number>
+             </property>
+             <property name="value">
+              <number>4</number>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Accuracy:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
             <widget class="QLineEdit" name="lineEdit_f_actual"/>
            </item>
-           <item row="9" column="1">
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_14">
+             <property name="text">
+              <string>Unknown particle:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
             <widget class="QLineEdit" name="lineEdit_f_unknown"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_22">
+             <property name="text">
+              <string>Max No. Electrons:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="spinBox_max_ee">
+             <property name="maximum">
+              <number>150</number>
+             </property>
+             <property name="value">
+              <number>3</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_12">
+             <property name="text">
+              <string>Actual Freq. [a.u.]</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_accuracy">
+             <property name="decimals">
+              <number>5</number>
+             </property>
+             <property name="minimum">
+              <double>0.000010000000000</double>
+             </property>
+             <property name="maximum">
+              <double>9.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.000010000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QGroupBox" name="groupBox_5">
+          <property name="title">
+           <string>Actions</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_6">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="pushButton_calculate">
+             <property name="text">
+              <string>Calculate</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="pushButton_isotopes">
+             <property name="text">
+              <string>Isotopes</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="pushButton_table_data">
+             <property name="text">
+              <string>Table Data</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="pushButton_isobars">
+             <property name="text">
+              <string>Isobars</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QPushButton" name="pushButton_isotones">
+             <property name="text">
+              <string>Isotones</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="pushButton_identify">
+             <property name="text">
+              <string>Identify</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -362,83 +462,20 @@
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
-        <property name="spacing">
-         <number>-1</number>
+       <widget class="QGroupBox" name="groupBox_4">
+        <property name="title">
+         <string>Results Pane</string>
         </property>
-        <item>
-         <widget class="QGroupBox" name="groupBox_5">
-          <property name="title">
-           <string>Actions</string>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout">
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QPlainTextEdit" name="plainTextEdit"/>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
-            <widget class="QPushButton" name="pushButton_calculate">
+            <widget class="QPushButton" name="pushButton_copy_table">
              <property name="text">
-              <string>Calculate</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_table_data">
-             <property name="text">
-              <string>Table Data</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="Line" name="line_4">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_isotopes">
-             <property name="text">
-              <string>Isotopes</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_isobars">
-             <property name="text">
-              <string>Isobars</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_isotones">
-             <property name="text">
-              <string>Isotones</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="Line" name="line_2">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_identify">
-             <property name="text">
-              <string>Identify</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="Line" name="line_3">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_save">
-             <property name="text">
-              <string>Save</string>
+              <string>Copy table</string>
              </property>
             </widget>
            </item>
@@ -449,29 +486,17 @@
              </property>
             </widget>
            </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupBox_4">
-          <property name="title">
-           <string>Results Pane</string>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
-            <widget class="QTextBrowser" name="textBrowser">
-             <property name="verticalScrollBarPolicy">
-              <enum>Qt::ScrollBarAlwaysOn</enum>
-             </property>
-             <property name="textInteractionFlags">
-              <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+            <widget class="QPushButton" name="pushButton_save">
+             <property name="text">
+              <string>Save</string>
              </property>
             </widget>
            </item>
           </layout>
-         </widget>
-        </item>
-       </layout>
+         </item>
+        </layout>
+       </widget>
       </item>
      </layout>
     </item>
@@ -525,13 +550,18 @@
      </widget>
     </item>
    </layout>
+   <zorder>groupBox_3</zorder>
+   <zorder>groupBox_4</zorder>
+   <zorder>groupBox_4</zorder>
+   <zorder>groupBox_6</zorder>
+   <zorder>groupBox_2</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1069</width>
+     <width>998</width>
      <height>22</height>
     </rect>
    </property>
@@ -617,22 +647,6 @@
     <hint type="destinationlabel">
      <x>361</x>
      <y>294</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBox_circum</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>label_18</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>598</x>
-     <y>244</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>544</x>
-     <y>300</y>
     </hint>
    </hints>
   </connection>

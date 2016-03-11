@@ -40,11 +40,18 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.home_folder = os.path.expanduser('~') + '/.barion/'
         self.make_folders()
 
-        # create storage rings
-        self.create_storage_rings()
-
         # create an instance of the table data and give yourself as UI Interface
         self.ame_data = AMEData(self)
+
+        # take care about ring combo
+        self.ring_dict = Ring.get_ring_dict()
+        keys = list(self.ring_dict.keys())
+        keys.sort()
+        self.comboBox_ring.addItems(keys)
+        self.current_ring_name = ''
+
+        self.comboBox_ring.setCurrentIndex(4)
+        self.on_comboBox_ring_changed(4)
 
         # fill combo box with names
         self.comboBox_name.addItems(self.ame_data.names_list)
@@ -68,18 +75,12 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         # self.tableView.verticalHeader().setVisible(False)
         self.tableView.setModel(self.tableView_model)
 
-    def create_storage_rings(self):
-        self.ring = Ring('ESR', 108.5)
-        self.ring.acceptance = 0.024
-        self.ring.gamma_t = 2.36
-        self.ring.mag_rigidity = 18
-        self.comboBox_ring.addItems([self.ring.name])
-
     def connect_signals(self):
         """
         Connects signals.
         :return:
         """
+        self.pushButton_copy_table.clicked.connect(self.on_pushButton_copy_table)
         self.pushButton_clear.clicked.connect(self.on_pushButton_clear)
         self.pushButton_isotopes.clicked.connect(self.show_isotopes)
         self.pushButton_isotones.clicked.connect(self.show_isotones)
@@ -112,6 +113,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.spinBox_zz.valueChanged.connect(self.on_spinBox_zz_changed)
 
         self.comboBox_name.currentIndexChanged.connect(self.on_comboBox_name_changed)
+        self.comboBox_ring.currentIndexChanged.connect(self.on_comboBox_ring_changed)
 
     def show_about_dialog(self):
         about_dialog = QDialog()
@@ -162,7 +164,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.reinit_particle()
         p_array = self.particle.get_isotopes()
         text = 'Isotopes of {} are:\n'.format(self.particle) + '\n'.join(map(str, p_array)) + '\n'
-        self.textBrowser.append(text)
+        self.plainTextEdit.appendPlainText(text)
 
     def show_isotones(self):
         """
@@ -172,7 +174,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         """
         self.reinit_particle()
         text = 'Isotones of {} are:\n'.format(self.particle) + '\n'.join(map(str, self.particle.get_isotones())) + '\n'
-        self.textBrowser.append(text)
+        self.plainTextEdit.appendPlainText(text)
 
     def show_isobars(self):
         """
@@ -182,7 +184,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         """
         self.reinit_particle()
         text = 'Isobars of {} are:\n'.format(self.particle) + '\n'.join(map(str, self.particle.get_isobars())) + '\n'
-        self.textBrowser.append(text)
+        self.plainTextEdit.appendPlainText(text)
 
     def save_file_dialog(self):
         """
@@ -201,12 +203,12 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         :param file_name:
         :return:
         """
-        if not self.textBrowser.toPlainText():
+        if not self.plainTextEdit.toPlainText():
             self.show_message('No results to save.')
             return
 
         with open(file_name, 'w') as f:
-            f.write(str(self.textBrowser.toPlainText()))
+            f.write(str(self.plainTextEdit.toPlainText()))
             self.show_message('Wrote to file {}.'.format(file_name))
 
     def check_nuclide_validity(self):
@@ -236,12 +238,15 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
             # Here make a particle
             zz = self.spinBox_zz.value()
             nn = self.spinBox_nn.value()
-            self.particle = Particle(zz, nn, self.ame_data, self.ring)
+            self.particle = Particle(zz, nn, self.ame_data, self.ring_dict[self.current_ring_name])
             self.particle.qq = self.spinBox_qq.value()
             self.particle.ke_u = self.doubleSpinBox_energy.value()
-            self.particle.path_length_m = self.doubleSpinBox_path_length.value()
             self.particle.i_beam_uA = self.doubleSpinBox_beam_current.value()
             self.particle.f_analysis_mhz = self.doubleSpinBox_f_analysis.value()
+            if not self.checkBox_circum.isChecked():
+                self.particle.path_length_m = self.doubleSpinBox_path_length.value()
+            else:
+                self.particle.path_length_m = self.ring_dict[self.current_ring_name].circumference
 
     def keyPressEvent(self, event):
         """
@@ -304,6 +309,10 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.spinBox_nn.setValue(idx)
         self.spinBox_qq.setValue(idx)
 
+    def on_comboBox_ring_changed(self, idx):
+        # ignore index for now
+        self.current_ring_name = self.comboBox_ring.itemText(idx)
+
     def on_pushButton_calculate(self):
         """
         SLOT
@@ -312,7 +321,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.do_calculate()
 
     def on_pushButton_clear(self):
-        self.textBrowser.clear()
+        self.plainTextEdit.clear()
         self.setup_table_view()
 
     def do_calculate(self):
@@ -325,9 +334,11 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
             self.show_message('Valid nuclide.')
             self.reinit_particle()
             self.update_table_view()
-            # self.textBrowser.append(self.particle.calculate_from_energy())
         else:
             self.show_message('Not a valid nuclide.')
+
+    def on_pushButton_copy_table(self):
+        self.plainTextEdit.appendPlainText(self.particle.calculate_from_energy())
 
     def on_pushButton_table_data(self):
         """
@@ -335,9 +346,11 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         :return:
         """
         self.reinit_particle()
-        self.textBrowser.append(self.particle.get_table_data())
+        self.plainTextEdit.appendPlainText(self.particle.get_table_data())
 
     def on_pushButton_identify(self):
+        # update rings etc...
+        self.reinit_particle()
         try:
             f_actual = float(self.lineEdit_f_actual.text())
             f_unknown = float(self.lineEdit_f_unknown.text())
@@ -345,7 +358,12 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
             self.show_message('Please enter valid frequencies in the text field.')
             return
 
-        self.textBrowser.append(self.particle.identify(float(f_actual), float(f_unknown)))
+        range_zz = self.spinBox_range_zz.value()
+        range_nn = self.spinBox_range_nn.value()
+        max_ee = self.spinBox_max_ee.value()
+        accuracy = self.doubleSpinBox_accuracy.value()
+        self.plainTextEdit.appendPlainText(
+            self.particle.identify(float(f_actual), float(f_unknown), range_zz, range_nn, max_ee, accuracy))
 
     def on_nav_n_pressed(self):
         """

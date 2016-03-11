@@ -69,7 +69,7 @@ class Particle(object):
             self.tbl_name + ' ' + \
             str(self.qq) + '+, ' + \
             'Z: ' + str(self.tbl_zz) + ', ' + \
-            'N:' + str(self.tbl_nn) + '\n'
+            'N: ' + str(self.tbl_nn)
 
     def get_isotopes(self):
         """
@@ -208,6 +208,7 @@ class Particle(object):
         s += "{} {} {}+\n".format(self.tbl_aa, self.tbl_name, self.qq)
         s += "z= {}, ".format(self.tbl_zz)
         s += "n= {}\n".format(self.tbl_nn)
+        s += 'Source: {source} \n'.format(source='** EXP **' if self.exp else '** SYS **')
         s += "Kin. Energy:\t\t{}\t\t[MeV/u]\n".format(self.ke_u)
         s += "Beam current:\t{}\t\t[µA]\n".format(self.i_beam_uA)
         s += "Path length:\t\t{}\t\t[m]\n".format(self.path_length_m)
@@ -256,6 +257,7 @@ class Particle(object):
         s = [['Nuclide:', "{} {} {}+".format(self.tbl_aa, self.tbl_name, self.qq), ''],
              ["Z:", str(self.tbl_zz), ''],
              ['N:', str(self.tbl_nn), ''],
+             ['Source:', '{source}'.format(source='** EXP **' if self.exp else '** SYS **'), ''],
              ['Kinetic energy:', str(self.ke_u), '[MeV/u]'],
              ['Beam current:', str(self.i_beam_uA), '[µA]'],
              ['Path length:', str(self.path_length_m), '[m]'],
@@ -285,25 +287,25 @@ class Particle(object):
 
         return s
 
-    def identify(self, f_actual, f_unknown):
-        max_ee = 5
-        zz_range = 20
-        nn_range = 20
+    # def identify(self, f_actual, f_unknown, range_zz, range_nn, max_ee, accuracy):
+    #     print(self.ring.get_alpha_p())
+
+    def identify(self, f_actual, f_unknown, range_zz, range_nn, max_ee, accuracy):
         alpha_p = self.ring.get_alpha_p()
         delta_f = f_actual - f_unknown
         delta_moq = - delta_f / f_actual * self.get_ionic_moq() / alpha_p
         moq_unknown = self.get_ionic_moq() - delta_moq
-        s = "Ring: ESR\n"
+        s = "Ring: {}\n".format(self.ring.name)
         s += 'gamma_t: {}\n'.format(self.ring.gamma_t)
         s += 'alpha_p: {}\n'.format(self.ring.get_alpha_p())
-        #s += "delta_moq: {}\n".format(delta_moq)
-        #s += 'moq:{}\n'.format(self.get_ionic_moq())
+        s += 'mode: {}\n'.format(self.ring.mode)
+        # s += "delta_moq: {}\n".format(delta_moq)
+        # s += 'moq:{}\n'.format(self.get_ionic_moq())
         s += 'm/Q of the unknown particle: {}\n'.format(moq_unknown)
-
         moq_dict = {}
         for i in self.ame_data.ame_table:
-            if i[4] in range(self.tbl_zz - zz_range, self.tbl_zz + zz_range):
-                if i[3] in range(self.tbl_nn - nn_range, self.tbl_nn + nn_range):
+            if i[4] in range(self.tbl_zz - range_zz, self.tbl_zz + range_zz):
+                if i[3] in range(self.tbl_nn - range_nn, self.tbl_nn + range_nn):
                     p = Particle(i[4], i[3], self.ame_data, self.ring)
                     for eee in range(max_ee):
                         p.qq = i[4] - eee
