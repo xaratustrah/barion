@@ -66,9 +66,10 @@ class Particle(object):
         """
         return \
             str(self.tbl_aa) + '-' + \
-            self.tbl_name + ', ' + \
+            self.tbl_name + ' ' + \
+            str(self.qq) + '+, ' + \
             'Z: ' + str(self.tbl_zz) + ', ' + \
-            'N:' + str(self.tbl_nn)
+            'N:' + str(self.tbl_nn) + '\n'
 
     def get_isotopes(self):
         """
@@ -78,7 +79,7 @@ class Particle(object):
         p_array = []
         for i in self.ame_data.ame_table:
             if i[4] == self.tbl_zz:
-                p = Particle(i[4], i[3], self.ame_data)
+                p = Particle(i[4], i[3], self.ame_data, self.ring)
                 p_array.append(p)
         return p_array
 
@@ -90,7 +91,7 @@ class Particle(object):
         p_array = []
         for i in self.ame_data.ame_table:
             if i[3] == self.tbl_nn:
-                p = Particle(i[4], i[3], self.ame_data)
+                p = Particle(i[4], i[3], self.ame_data, self.ring)
                 p_array.append(p)
         return p_array
 
@@ -102,7 +103,7 @@ class Particle(object):
         p_array = []
         for i in self.ame_data.ame_table:
             if i[5] == self.tbl_aa:
-                p = Particle(i[4], i[3], self.ame_data)
+                p = Particle(i[4], i[3], self.ame_data, self.ring)
                 p_array.append(p)
         return p_array
 
@@ -286,14 +287,31 @@ class Particle(object):
 
     def identify(self, f_actual, f_unknown):
         max_ee = 5
-        max_aa = 142
-        max_zz = 60
-        # todo:here
+        zz_range = 20
+        nn_range = 20
         alpha_p = self.ring.get_alpha_p()
         delta_f = f_actual - f_unknown
-        delta_moq = delta_f / alpha_p * self.get_ionic_moq()
+        delta_moq = - delta_f / f_actual * self.get_ionic_moq() / alpha_p
+        moq_unknown = self.get_ionic_moq() - delta_moq
         s = "Ring: ESR\n"
-        s += "delta_moq: {}\n".format(delta_moq)
-        s += 'moq of unknown particle:{}\n'.format(self.get_ionic_moq() + delta_moq)
+        s += 'gamma_t: {}\n'.format(self.ring.gamma_t)
+        s += 'alpha_p: {}\n'.format(self.ring.get_alpha_p())
+        #s += "delta_moq: {}\n".format(delta_moq)
+        #s += 'moq:{}\n'.format(self.get_ionic_moq())
+        s += 'm/Q of the unknown particle: {}\n'.format(moq_unknown)
+
+        moq_dict = {}
+        for i in self.ame_data.ame_table:
+            if i[4] in range(self.tbl_zz - zz_range, self.tbl_zz + zz_range):
+                if i[3] in range(self.tbl_nn - nn_range, self.tbl_nn + nn_range):
+                    p = Particle(i[4], i[3], self.ame_data, self.ring)
+                    for eee in range(max_ee):
+                        p.qq = i[4] - eee
+                        moq_dict[str(p)] = p.get_ionic_moq()
+
+        s += 'Unknown nuclide is: '
+        s += str(
+            [k for k, v in moq_dict.items() if v == min(moq_dict.values(), key=lambda x: abs(x - moq_unknown))][0])
+        s += "\n"
 
         return s

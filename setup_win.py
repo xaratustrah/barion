@@ -1,4 +1,4 @@
-# !/usr/bin/env python
+#!/usr/bin/env python
 """
 Barion
 
@@ -10,12 +10,11 @@ Mar 2016 Xaratustrah
 
 """
 
-from distutils.core import setup
 import py2exe
+from distutils.core import setup
+from version import __version__
 
 name = 'barion'
-
-version = '0.0.1'
 
 pkgs = ['fortranformat']
 
@@ -25,9 +24,21 @@ includes = ['sip',
             'PyQt5.QtCore',
             'PyQt5.QtGui']
 
+excludes = ['pkg_resources',
+            'doctest',
+            'pdb',
+            'optparse',
+            'jsonschema',
+            'tornado',
+            'setuptools',
+            'urllib2',
+            'tkinter']
+
 options = {'bundle_files': 1,
+           # 'optimize': 2,
            'compressed': True,
            'includes': includes,
+           'excludes': excludes,
            'packages': pkgs
            }
 
@@ -36,15 +47,15 @@ datafiles = [("platforms", ["C:\\Python34\\Lib\\site-packages\\PyQt5\\plugins\\p
 
 setup(
     name=name,
-    version=version,
-    url='',
-    license='',
+    version=__version__,
+    url='https://github.com/xaratustrah/barion',
+    license='GPLv.3',
     zipfile=None,
     data_files=datafiles,
     windows=[{
         'script': 'barion.py',
         'icon_resources': [(1, 'icon.ico')],
-        'dest_base': 'barion'
+        'dest_base': name
     }],
     options={'py2exe': options}
 )

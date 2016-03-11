@@ -18,6 +18,7 @@ from aboutdialog_ui import Ui_AbooutDialog
 from particle import Particle
 from amedata import AMEData
 from ring import Ring
+from version import __version__
 import os
 
 
@@ -40,7 +41,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.make_folders()
 
         # create storage rings
-        self.generate_rings()
+        self.create_storage_rings()
 
         # create an instance of the table data and give yourself as UI Interface
         self.ame_data = AMEData(self)
@@ -49,25 +50,28 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.comboBox_name.addItems(self.ame_data.names_list)
 
         # UI related stuff
+        self.setup_table_view()
         self.connect_signals()
-
-        # setup table view
-        self.tableView_model = QStandardItemModel(40, 3)
-        self.tableView_model.setHorizontalHeaderItem(0, QStandardItem('Name'))
-        self.tableView_model.setHorizontalHeaderItem(1, QStandardItem('Value'))
-        self.tableView_model.setHorizontalHeaderItem(2, QStandardItem('Unit'))
-        self.tableView.verticalHeader().setVisible(False)
-        self.tableView.setModel(self.tableView_model)
 
         # A particle to begin with
         self.particle = None
         self.comboBox_name.setCurrentIndex(6)
         self.reinit_particle()
 
-    def generate_rings(self):
+    def setup_table_view(self):
+        # setup table view
+        self.tableView_model = QStandardItemModel(40, 3)
+        self.tableView_model.clear()
+        self.tableView_model.setHorizontalHeaderItem(0, QStandardItem('Name'))
+        self.tableView_model.setHorizontalHeaderItem(1, QStandardItem('Value'))
+        self.tableView_model.setHorizontalHeaderItem(2, QStandardItem('Unit'))
+        # self.tableView.verticalHeader().setVisible(False)
+        self.tableView.setModel(self.tableView_model)
+
+    def create_storage_rings(self):
         self.ring = Ring('ESR', 108.5)
         self.ring.acceptance = 0.024
-        self.ring.gamma_t = 1.23
+        self.ring.gamma_t = 2.36
         self.ring.mag_rigidity = 18
         self.comboBox_ring.addItems([self.ring.name])
 
@@ -113,6 +117,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         about_dialog = QDialog()
         about_dialog.ui = Ui_AbooutDialog()
         about_dialog.ui.setupUi(about_dialog)
+        about_dialog.ui.label_version.setText('Version: {}'.format(__version__))
         about_dialog.exec_()
         about_dialog.show()
 
@@ -296,8 +301,8 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         :return:
         """
         self.spinBox_zz.setValue(idx)
-        # self.spinBox_nn.setValue(idx)
-        # self.spinBox_qq.setValue(idx)
+        self.spinBox_nn.setValue(idx)
+        self.spinBox_qq.setValue(idx)
 
     def on_pushButton_calculate(self):
         """
@@ -308,7 +313,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
 
     def on_pushButton_clear(self):
         self.textBrowser.clear()
-        self.tableView_model.clear()
+        self.setup_table_view()
 
     def do_calculate(self):
         """
@@ -333,9 +338,14 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.textBrowser.append(self.particle.get_table_data())
 
     def on_pushButton_identify(self):
-        f_actual = self.doubleSpinBox_f_actual.value()
-        f_unknown = self.doubleSpinBox_f_unknown.value()
-        self.textBrowser.append(self.particle.identify(f_actual, f_unknown))
+        try:
+            f_actual = float(self.lineEdit_f_actual.text())
+            f_unknown = float(self.lineEdit_f_unknown.text())
+        except(ValueError):
+            self.show_message('Please enter valid frequencies in the text field.')
+            return
+
+        self.textBrowser.append(self.particle.identify(float(f_actual), float(f_unknown)))
 
     def on_nav_n_pressed(self):
         """

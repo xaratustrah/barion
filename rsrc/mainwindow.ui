@@ -267,38 +267,6 @@
              </property>
             </widget>
            </item>
-           <item row="9" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_f_unknown">
-             <property name="decimals">
-              <number>4</number>
-             </property>
-             <property name="maximum">
-              <double>10000.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.000100000000000</double>
-             </property>
-             <property name="value">
-              <double>245.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_f_actual">
-             <property name="decimals">
-              <number>4</number>
-             </property>
-             <property name="maximum">
-              <double>10000.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.000100000000000</double>
-             </property>
-             <property name="value">
-              <double>245.000000000000000</double>
-             </property>
-            </widget>
-           </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_8">
              <property name="text">
@@ -315,7 +283,7 @@
               <double>100000.000000000000000</double>
              </property>
              <property name="singleStep">
-              <double>0.000100000000000</double>
+              <double>0.001000000000000</double>
              </property>
              <property name="value">
               <double>100.000000000000000</double>
@@ -381,6 +349,12 @@
               <enum>Qt::Horizontal</enum>
              </property>
             </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLineEdit" name="lineEdit_f_actual"/>
+           </item>
+           <item row="9" column="1">
+            <widget class="QLineEdit" name="lineEdit_f_unknown"/>
            </item>
           </layout>
          </widget>
