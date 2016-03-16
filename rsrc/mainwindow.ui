@@ -348,7 +348,7 @@
            <item row="5" column="0">
             <widget class="QLabel" name="label">
              <property name="text">
-              <string>Accuracy:</string>
+              <string>Sensitivity radius:</string>
              </property>
             </widget>
            </item>
@@ -358,7 +358,7 @@
            <item row="1" column="0">
             <widget class="QLabel" name="label_14">
              <property name="text">
-              <string>Unknown particle:</string>
+              <string>Unknown particle's:</string>
              </property>
             </widget>
            </item>
@@ -385,7 +385,7 @@
            <item row="0" column="0">
             <widget class="QLabel" name="label_12">
              <property name="text">
-              <string>Actual Freq. [a.u.]</string>
+              <string>Measured Freq. [a.u.]</string>
              </property>
             </widget>
            </item>
@@ -402,6 +402,9 @@
              </property>
              <property name="singleStep">
               <double>0.000010000000000</double>
+             </property>
+             <property name="value">
+              <double>0.001000000000000</double>
              </property>
             </widget>
            </item>
@@ -550,11 +553,6 @@
      </widget>
     </item>
    </layout>
-   <zorder>groupBox_3</zorder>
-   <zorder>groupBox_4</zorder>
-   <zorder>groupBox_4</zorder>
-   <zorder>groupBox_6</zorder>
-   <zorder>groupBox_2</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -571,24 +569,27 @@
     </property>
     <addaction name="actionAbout"/>
     <addaction name="separator"/>
-    <addaction name="actionLoad_Freqlist"/>
-    <addaction name="separator"/>
     <addaction name="actionSave_results"/>
     <addaction name="actionClear_results"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
+   <widget class="QMenu" name="menuParticle">
+    <property name="title">
+     <string>Particle</string>
+    </property>
+    <addaction name="actionCalculate"/>
+    <addaction name="actionShow_table_data"/>
+    <addaction name="actionIdentify"/>
+    <addaction name="separator"/>
+    <addaction name="actionIsotopes"/>
+    <addaction name="actionIsobars"/>
+    <addaction name="actionIsotones"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuParticle"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionLoad_Freqlist">
-   <property name="text">
-    <string>Load Freq. List</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+L</string>
-   </property>
-  </action>
   <action name="actionClear_results">
    <property name="text">
     <string>Clear results</string>
@@ -613,6 +614,45 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionCalculate">
+   <property name="text">
+    <string>Calculate</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
+  </action>
+  <action name="actionShow_table_data">
+   <property name="text">
+    <string>Show table data</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="actionIdentify">
+   <property name="text">
+    <string>Identify</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="actionIsotopes">
+   <property name="text">
+    <string>Isotopes</string>
+   </property>
+  </action>
+  <action name="actionIsobars">
+   <property name="text">
+    <string>Isobars</string>
+   </property>
+  </action>
+  <action name="actionIsotones">
+   <property name="text">
+    <string>Isotones</string>
    </property>
   </action>
  </widget>

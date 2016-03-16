@@ -30,7 +30,6 @@ class Particle(object):
         # given only values (primary)
         self.ame_data = ame_data
         self.ring = ring
-        self.qq = 0
 
         # calculated and given values (secondary)
         self.ke_u = 0.0
@@ -58,6 +57,9 @@ class Particle(object):
                     self.exp = True
                 else:
                     self.exp = False
+
+        # start with a bare ion
+        self.qq = self.tbl_zz
 
     def __str__(self):
         """
@@ -310,10 +312,17 @@ class Particle(object):
                     for eee in range(max_ee):
                         p.qq = i[4] - eee
                         moq_dict[str(p)] = p.get_ionic_moq()
+        #s += 'Current particle: ' + str(self) + '\n'
+        s += '\n'
+        s += 'Candidates are: \n'
+        candidates = [k for (k, v) in moq_dict.items() if abs(v - moq_unknown) <= accuracy]
+        # s += str(
+        #    [k for k, v in moq_dict.items() if v == min(moq_dict.values(), key=lambda x: abs(x - moq_unknown))][0])
 
-        s += 'Unknown nuclide is: '
-        s += str(
-            [k for k, v in moq_dict.items() if v == min(moq_dict.values(), key=lambda x: abs(x - moq_unknown))][0])
+        if str(self) in candidates:
+            candidates.remove(str(self))
+
+        s += '\n'.join(candidates)
         s += "\n"
 
         return s

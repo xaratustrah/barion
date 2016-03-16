@@ -10,9 +10,9 @@ Mar 2016 Xaratustrah
 
 """
 
-import py2exe
-from distutils.core import setup
 from version import __version__
+from distutils.core import setup
+import py2exe
 
 name = 'barion'
 
@@ -34,7 +34,7 @@ excludes = ['pkg_resources',
             'urllib2',
             'tkinter']
 
-options = {'bundle_files': 1,
+options = {'bundle_files': 3,
            # 'optimize': 2,
            'compressed': True,
            'includes': includes,
@@ -54,7 +54,7 @@ setup(
     data_files=datafiles,
     windows=[{
         'script': 'barion.py',
-        'icon_resources': [(1, 'icon.ico')],
+        'icon_resources': [(1, 'rsrc/icon.ico')],
         'dest_base': name
     }],
     options={'py2exe': options}

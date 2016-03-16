@@ -80,6 +80,19 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         Connects signals.
         :return:
         """
+        self.actionClear_results.triggered.connect(self.on_pushButton_clear)
+        self.actionSave_results.triggered.connect(self.save_file_dialog)
+        self.actionCalculate.triggered.connect(self.on_pushButton_calculate)
+        self.actionShow_table_data.triggered.connect(self.on_pushButton_table_data)
+        self.actionIdentify.triggered.connect(self.on_pushButton_identify)
+        self.actionIsotopes.triggered.connect(self.show_isotopes)
+        self.actionIsobars.triggered.connect(self.show_isobars)
+        self.actionIsotones.triggered.connect(self.show_isotones)
+
+        # Action about and Action quit will be shown differently in OSX
+        self.actionAbout.triggered.connect(self.show_about_dialog)
+        self.actionQuit.triggered.connect(QCoreApplication.instance().quit)
+
         self.pushButton_copy_table.clicked.connect(self.on_pushButton_copy_table)
         self.pushButton_clear.clicked.connect(self.on_pushButton_clear)
         self.pushButton_isotopes.clicked.connect(self.show_isotopes)
@@ -89,15 +102,6 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.pushButton_calculate.clicked.connect(self.on_pushButton_calculate)
         self.pushButton_table_data.clicked.connect(self.on_pushButton_table_data)
         self.pushButton_identify.clicked.connect(self.on_pushButton_identify)
-
-        self.actionClear_results.triggered.connect(self.on_pushButton_clear)
-        self.actionSave_results.triggered.connect(self.save_file_dialog)
-
-        # Action about and Action quit will be shown differently in OSX
-
-        self.actionAbout.triggered.connect(self.show_about_dialog)
-        self.actionQuit.triggered.connect(QCoreApplication.instance().quit)
-        # self.actionLoad_Freqlist.triggered.connect(self.save_file_dialog)
 
         self.pushButton_nav_n.clicked.connect(self.on_nav_n_pressed)
         self.pushButton_nav_ne.clicked.connect(self.on_nav_ne_pressed)
@@ -365,6 +369,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.plainTextEdit.appendPlainText(
             self.particle.identify(float(f_actual), float(f_unknown), range_zz, range_nn, max_ee, accuracy))
 
+        self.show_message('You may narrow your search either by reducing search area or the sensitivity radius.')
     def on_nav_n_pressed(self):
         """
         SLOT
