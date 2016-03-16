@@ -10,11 +10,10 @@ Mar 2016 Xaratustrah
 
 """
 
+from version import __version__
 from setuptools import setup
 
 app = ['barion.py']
-
-version = '0.0.1'
 
 pkgs = ['fortranformat']
 
@@ -26,18 +25,18 @@ includes = ['sip',
 
 options = {'argv_emulation': True,
            'includes': includes,
-           'iconfile': 'icon.icns',
+           'iconfile': 'rsrc/icon.icns',
            'packages': pkgs}
 
-datafiles = []
+data_files = []
 
 setup(
     app=app,
     name='barion',
-    version=version,
-    url='',
-    license='',
-    data_files=datafiles,
+    version=__version__,
+    url='https://github.com/xaratustrah/barion',
+    license='GPLv.3',
+    data_files=data_files,
     options={'py2app': options},
-    setup_requires=['py2app']
+    setup_requires=['py2app'],
 )
