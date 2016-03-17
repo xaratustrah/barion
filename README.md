@@ -44,7 +44,7 @@ The resulting file *icudt53.dll* which is very big (~22 MB) has been replaced by
 
 	upx --best --compress-exports=0 --strip-relocs=0 *.pyd *.dll
 
-Please make sure that I have removed the files **MSVCP100.dll** and **MSVCR100.dll** because these can usually be found on every system.
+Please note that I have removed the files **MSVCP100.dll** and **MSVCR100.dll** because these can usually be found on every system.
 
 
 #### OSX Binary release
