@@ -39,6 +39,18 @@ This program makes NO CLAIMS OF CORRECTNESS OF THE DATA AND CALCULATION VALUES W
 For some versions, binary releases for OSX and Win will be provided on GitHUB.
 An Arch linux package is planned and will be announced.
 
+#### Win Binary Release
+The resulting file *icudt53.dll* which is very big (~22 MB) has been replaced by a minimal version taken from [this page](https://forum.qt.io/topic/37891/minimal-icudt51-dll-icudt52-dll-icudt53-dll-icudt54-dll-and-icudt55-dll). Finally using [UPX](http://upx.sourceforge.net/) the size of the resulting compilation under windows has been reduced by the following command:
+
+	upx --best --compress-exports=0 --strip-relocs=0 *.pyd *.dll
+
+Please make sure that I have removed the files **MSVCP100.dll** and **MSVCR100.dll** because these can usually be found on every system.
+
+
+#### OSX Binary release
+
+This is still work in progress.
+
 ### Build / Run Prerequisites
 
 **barion** is writen in Python 3.4 so it needs a standard working environment such as Linux, 
@@ -70,10 +82,7 @@ then you write
     
 then you should get a binary code.
 
-#### Miniconda / Anaconda
+ 
+## Acknowledgements
+I am thankful to [carlkl](https://github.com/carlkl) for his valuable help in making a stand alone binary under MS Windows and also for fruitful discussions and suggestions.
 
-Unfortunately PyQt5 is not yet supported in the main channel. But it can be installed from various channels.
- I have not tested it yet because I couldn't match the versions though. Anyone who makes it
- please leave a line here for info.
- 
- 
