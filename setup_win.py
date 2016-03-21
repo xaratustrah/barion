@@ -12,8 +12,8 @@ http://stackoverflow.com/questions/31680439/exe-built-with-cx-freeze-pyqt5-pytho
 and @carlkl
 """
 
-from version import __version__
 from distutils.core import setup
+from version import __version__
 from glob import glob
 import PyQt5
 import py2exe
