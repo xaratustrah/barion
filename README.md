@@ -39,17 +39,11 @@ This program makes NO CLAIMS OF CORRECTNESS OF THE DATA AND CALCULATION VALUES W
 For some versions, binary releases for OSX and Win will be provided on GitHUB.
 An Arch linux package is planned and will be announced.
 
-#### Win Binary Release
-The resulting file *icudt53.dll* which is very big (~22 MB) has been replaced by a minimal version taken from [this page](https://forum.qt.io/topic/37891/minimal-icudt51-dll-icudt52-dll-icudt53-dll-icudt54-dll-and-icudt55-dll). Finally using [UPX](http://upx.sourceforge.net/) the size of the resulting compilation under windows has been reduced by the following command:
 
-	upx --best --compress-exports=0 --strip-relocs=0 *.pyd *.dll
+#### Binary releases
 
-Please note that I have removed the files **MSVCP100.dll** and **MSVCR100.dll** because these can usually be found on every system.
+Binary releases are available in the release section.
 
-
-#### OSX Binary release
-
-This is still work in progress.
 
 ### Build / Run Prerequisites
 
@@ -68,13 +62,12 @@ package manager easily.
 
 #### Win
 
-It is possible to run and even make a binary file using py2exe under Win. I tested this 
-using Win7 64 bit. On a blank Win machine download and install **Python 3.4.0** and 
-**PyQt5.5.0** both x64 versions.
-Note  that version numbers are important, because otherwise they will not match. 
-Using **pip** you should then install
+It is possible to run and make a binary file using py2exe under Win. More general info can be found in this [gist](https://gist.github.com/xaratustrah/4efc5001f1bbcce47e02e2343ba29b87).
 
-    pip install fortranformat py2exe
+
+Additional packages are:
+
+    pip install fortranformat
 
 then you write
 
