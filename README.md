@@ -48,34 +48,11 @@ Binary releases are available in the release section.
 ### Build / Run Prerequisites
 
 **barion** is writen in Python 3.4 so it needs a standard working environment such as Linux, 
-OSX or Windows. It should work out of the box
+OSX or Windows. More general info on python installation under Win and OSX can be found on this [gist](https://gist.github.com/xaratustrah/4efc5001f1bbcce47e02e2343ba29b87). It should work out of the box
 with standard linux installations. **barion** needs the library **fortranformat** which can 
-be installed using **pip** pacakge manager. **PyQt5** on the other hand should be installed
- separately because it contains many binary bindings.
- 
- 
-#### OSX and Lin
-
-Under OSX standard macports installation of python 3.4 and also via macports the PyQt5. 
-The rest is obvious. Under linux you should as well be able to use your distribution's
-package manager easily.
-
-#### Win
-
-It is possible to run and make a binary file using py2exe under Win. More general info can be found in this [gist](https://gist.github.com/xaratustrah/4efc5001f1bbcce47e02e2343ba29b87).
+be installed using **pip** pacakge manager.
 
 
-Additional packages are:
-
-    pip install fortranformat
-
-then you write
-
-    python setup_win.py py2exe
-    
-then you should get a binary code.
-
- 
 ## Acknowledgements
 I am thankful to [carlkl](https://github.com/carlkl) for his valuable help in making a stand alone binary under MS Windows and also for fruitful discussions and suggestions.
 
