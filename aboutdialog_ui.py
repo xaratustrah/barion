@@ -11,9 +11,15 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_AbooutDialog(object):
     def setupUi(self, AbooutDialog):
         AbooutDialog.setObjectName("AbooutDialog")
-        AbooutDialog.resize(515, 369)
+        AbooutDialog.resize(515, 389)
         self.verticalLayout = QtWidgets.QVBoxLayout(AbooutDialog)
         self.verticalLayout.setObjectName("verticalLayout")
+        self.label_2 = QtWidgets.QLabel(AbooutDialog)
+        self.label_2.setText("")
+        self.label_2.setPixmap(QtGui.QPixmap(":/icons/icon_128x128.png"))
+        self.label_2.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_2.setObjectName("label_2")
+        self.verticalLayout.addWidget(self.label_2)
         self.label = QtWidgets.QLabel(AbooutDialog)
         self.label.setObjectName("label")
         self.verticalLayout.addWidget(self.label)
@@ -56,3 +62,4 @@ class Ui_AbooutDialog(object):
 "<p align=\"center\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'.Helvetica Neue DeskInterface\';\">License: GPL.v3</span></p></body></html>"))
         self.pushButton_ok.setText(_translate("AbooutDialog", "OK"))
 
+import gui_rc
