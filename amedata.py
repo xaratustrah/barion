@@ -28,8 +28,10 @@ class AMEData(object):
 
         self.ui_interface = ui_interface
         self.ame_table = []
+        self.nubase_table = []
         self.home_folder = ui_interface.home_folder
-        self.ame_data_filename = '{}mass.data'.format(self.home_folder)
+        self.ame_data_filename = '{}ame.data'.format(self.home_folder)
+        self.nubase_data_filename = '{}nubase.data'.format(self.home_folder)
         self.check_for_database()
 
         self.aa_max = 0
@@ -69,18 +71,19 @@ class AMEData(object):
         Checks if database exists on user's home directory
         :return:
         """
-        if not os.path.exists(self.ame_data_filename):
+        if not os.path.exists(self.ame_data_filename) or not os.path.exists(self.nubase_data_filename):
             response = self.ui_interface.show_message_box(
-                'AME Database file {} does not exist. Download from AME website?'.format(self.ame_data_filename))
+                'AME Database files do not exist. Download from AME website into {}?'.format(self.home_folder))
             if response:
-                self.download_mass_data()
+                self.download_ame_data()
                 self.check_for_database()  # recursive call!
             else:
                 return
         else:
             self.ui_interface.show_message(
-                'AME Database file is available.')
+                'AME Database files are available.')
             self.init_ame_db()
+            self.init_nubase_db()
 
     def init_ame_db(self):
         """
@@ -108,13 +111,27 @@ class AMEData(object):
                         dataline[i] = dataline[i].strip()
                 self.ame_table.append(dataline)
 
-    def download_mass_data(self):
+    def init_nubase_db(self):
+        """
+        read and initiate the nubase from the file into memory
+        Returns
+        -------
+
+        """
+        # todo here!
+        pass
+
+    def download_ame_data(self):
         """
         Download the file from internet if not available locally
         :return:
         """
         g = ur.urlopen(AMEData.AME_DATA_LINK)
-        with open(self.home_folder + 'mass.data', 'b+w') as f:
+        with open(self.home_folder + 'ame.data', 'b+w') as f:
+            f.write(g.read())
+
+        g = ur.urlopen(AMEData.AME_NUTAB_LINK)
+        with open(self.home_folder + 'nubase.data', 'b+w') as f:
             f.write(g.read())
 
     # ------------------------------------
@@ -138,11 +155,12 @@ class AMEData(object):
 
     @staticmethod
     def get_kmh(mps):
-        return mps*18/5
+        return mps * 18 / 5
 
     # Constants
 
     AME_DATA_LINK = 'http://amdc.impcas.ac.cn/evaluation/data2012/data/mass.mas12'
+    AME_NUTAB_LINK = 'http://amdc.in2p3.fr/nubase/nubtab12.asc'
 
     #
     # Table of electron binding energies. V.:09.09.2007 (YAL)

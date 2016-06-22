@@ -32,7 +32,8 @@ class Ring(object):
 
         esr = Ring('ESR', 108.5)
         esr.acceptance = 0.024
-        esr.gamma_t = 2.36
+        esr.gamma_t = 2.30
+        #esr.gamma_t = 2.44 thoeretical
         esr.mag_rigidity = 18
         ring_dic['ESR'] = esr
 

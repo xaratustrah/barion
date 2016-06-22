@@ -36,6 +36,8 @@ class Particle(object):
         self.path_length_m = 0.0
         self.f_analysis_mhz = 0.0
         self.i_beam_uA = 0.0
+        self.lifetime = 0.0
+        self.lifetime_flag = 'unknown' # stable, less, more, unknown
 
         # variables with tbl in the name are direct readouts form the data file
 
@@ -154,6 +156,9 @@ class Particle(object):
     def get_gamma(self):
         return self.get_total_energy_mev() / AMEData.to_mev(self.get_ionic_mass_in_u()) + 1.0
 
+    def get_eta(self):
+        return (1 / self.get_gamma() ** 2) - (1 / self.ring.gamma_t ** 2)
+
     # --------------------------------
 
     def get_beta(self):
@@ -233,6 +238,8 @@ class Particle(object):
         s += "Velocity:\t\t{}\t[m/s]\n".format(self.get_velocity())
         s += "\t\t{}\t[km/h]\n".format(AMEData.get_kmh(self.get_velocity()))
 
+        s += "eta:\t\t{}\n".format(self.get_eta())
+
         s += "Relativistic mass:\t{}\t[MeV/c^2]\n".format(self.get_relativistic_mass())
         s += "\t\t{}\t[u]\n".format(AMEData.to_u(self.get_relativistic_mass()))
 
@@ -272,6 +279,7 @@ class Particle(object):
              ['gamma:', str(self.get_gamma()), ''],
              ['beta:', str(self.get_beta()), ''], ['beta * gamma:', str(self.get_beta_gamma()), ''],
              ['Velocity:', str(self.get_velocity()), '[m/s]'],
+             ['eta:', str(self.get_eta()), ''],
              ['', str(AMEData.get_kmh(self.get_velocity())), '[km/h]'],
              ['Rel. mass:', str(self.get_relativistic_mass()), '[MeV/c^2]'],
              ['', str(AMEData.to_u(self.get_relativistic_mass())), '[u]'],
@@ -312,7 +320,7 @@ class Particle(object):
                     for eee in range(max_ee):
                         p.qq = i[4] - eee
                         moq_dict[str(p)] = p.get_ionic_moq()
-        #s += 'Current particle: ' + str(self) + '\n'
+        # s += 'Current particle: ' + str(self) + '\n'
         s += '\n'
         s += 'Candidates are: \n'
         candidates = [k for (k, v) in moq_dict.items() if abs(v - moq_unknown) <= accuracy]
