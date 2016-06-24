@@ -11,7 +11,7 @@ Mar 2016 Xaratustrah
 
 import fortranformat as ff
 import urllib.request as ur
-import os
+import os, re
 
 
 class AMEData(object):
@@ -118,8 +118,18 @@ class AMEData(object):
         -------
 
         """
-        # todo here!
-        pass
+        #p1 = re.compile('(?=[^.])(\D)', re.IGNORECASE)
+        p2 = re.compile('(\d)', re.IGNORECASE)
+        with open(self.nubase_data_filename) as f:
+            for line in f:
+                name = line[11:18].strip()
+                if len(re.sub(p2, '', name)) == 3:
+                    continue
+                lt = line[60:69].strip()
+                #lt = re.sub(p1, '', line[60:69])
+                mp = line[69:71].strip()
+                single = [name, lt, AMEData.get_multiplier(mp)]
+                self.nubase_table.append(single)
 
     def download_ame_data(self):
         """
@@ -156,6 +166,56 @@ class AMEData(object):
     @staticmethod
     def get_kmh(mps):
         return mps * 18 / 5
+
+    @staticmethod
+    def get_multiplier(mult):
+        mult = mult.strip()
+        result = 0.0
+        if mult == '':
+            result = 0.0
+        if mult == 's':
+            result = 1
+        if mult == 'm':
+            result = 60
+        if mult == 'h':
+            result = 3600
+        if mult == 'd':
+            result = 86400
+        if mult == 'y':
+            result = 31557600
+        if mult == 'ms':
+            result = 1e-3
+        if mult == 'us':
+            result = 1e-6
+        if mult == 'ns':
+            result = 1e-9
+        if mult == 'ps':
+            result = 1e-12
+        if mult == 'fs':
+            result = 1e-15
+        if mult == 'as':
+            result = 1e-18
+        if mult == 'zs':
+            result = 1e-21
+        if mult == 'ys':
+            result = 1e-24
+        if mult == 'ky':
+            result = 31557600e3
+        if mult == 'My':
+            result = 31557600e6
+        if mult == 'Gy':
+            result = 31557600e9
+        if mult == 'Ty':
+            result = 31557600e12
+        if mult == 'Py':
+            result = 31557600e15
+        if mult == 'Ey':
+            result = 31557600e18
+        if mult == 'Zy':
+            result = 31557600e21
+        if mult == 'Yy':
+            result = 31557600e24
+        return result
 
     # Constants
 

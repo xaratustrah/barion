@@ -370,6 +370,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
             self.particle.identify(float(f_actual), float(f_unknown), range_zz, range_nn, max_ee, accuracy))
 
         self.show_message('You may narrow your search either by reducing search area or the sensitivity radius.')
+
     def on_nav_n_pressed(self):
         """
         SLOT

@@ -37,7 +37,7 @@ class Particle(object):
         self.f_analysis_mhz = 0.0
         self.i_beam_uA = 0.0
         self.lifetime = 0.0
-        self.lifetime_flag = 'unknown' # stable, less, more, unknown
+        self.lifetime_flag = 'unknown'  # stable, less, more, unknown
 
         # variables with tbl in the name are direct readouts form the data file
 
@@ -125,10 +125,33 @@ class Particle(object):
             'Mass Excess [keV]: ' + str(self.tbl_massexcess_kev) + ' ± ' + str(self.tbl_massexcess_err_kev) + '\n' + \
             'Binding Energy [keV]: ' + str(self.tbl_binen_kev) + ' ± ' + str(self.tbl_bien_err_kev) + '\n' + \
             'Beta Decay Energy [keV]: ' + str(self.tbl_betaen_kev) + ' ± ' + str(self.tbl_betaen_err_kev) + '\n' + \
-            'Atomic Mass [uU]: ' + str(self.tbl_am_microu) + ' ± ' + str(self.tbl_am_err_microu) + '\n'
+            'Atomic Mass [uU]: ' + str(self.tbl_am_microu) + ' ± ' + str(self.tbl_am_err_microu) + '\n' + \
+            'Lifetime [s]: ' + str(self.get_lifetime()) + '\n'
 
     # --------------------------------
 
+    def get_lifetime(self):
+        lt = ''
+        mp = ''
+        result = ''
+        for entry in self.ame_data.nubase_table:
+            if entry[0] == '{}{}'.format(self.tbl_aa, self.tbl_name):
+                lt = entry[1]
+                mp = entry[2]
+            try:
+                result = float(lt) * float(mp)
+            except(ValueError):
+                if '<' in lt:
+                    self.lifetime_flag = 'less_than'
+                    result = float(lt.replace('<', '')) * float(mp)
+                elif '>' in lt:
+                    self.lifetime_flag = 'more_than'
+                    result = float(lt.replace('<', '')) * float(mp)
+                else:
+                    result = lt
+        return result
+
+    # --------------------------------
     def get_total_charge(self):
         return self.qq * AMEData.EE
 
