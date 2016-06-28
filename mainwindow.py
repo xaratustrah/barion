@@ -36,10 +36,6 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         super(mainWindow, self).__init__()
         self.setupUi(self)
 
-        # set home folders
-        self.home_folder = os.path.expanduser('~') + '/.barion/'
-        self.make_folders()
-
         # create an instance of the table data and give yourself as UI Interface
         self.ame_data = AMEData(self)
 
@@ -127,14 +123,6 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         about_dialog.exec_()
         about_dialog.show()
 
-    def make_folders(self):
-        """
-        Checks and makes missing folders in the user's home directory
-        :return:
-        """
-        if not os.path.exists(self.home_folder):
-            os.mkdir(self.home_folder)
-
     def show_message(self, message):
         """
         Implementation of an abstract method:
@@ -146,6 +134,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
 
     def show_message_box(self, text):
         """
+        Implementation of an abstract method:
         Display a message box.
         :param text:
         :return:

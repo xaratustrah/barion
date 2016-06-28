@@ -18,18 +18,27 @@ class AMEData(object):
     """
     Class representing the AME Data
     """
+    # Constants
 
-    def __init__(self, ui_interface):
+    AME_DATA_LINK = 'http://amdc.impcas.ac.cn/evaluation/data2012/data/mass.mas12'
+    AME_NUTAB_LINK = 'http://amdc.in2p3.fr/nubase/nubtab12.asc'
+    FOLDER_NAME = '/.ame/'
+
+    def __init__(self, ui_interface=None):
         """
         Constructor
-        :param ui_interface: An instance of the UI or the UI interface
+        :param ui_interface: An instance of the UI or the UI interface, this option is not required
         :return:
         """
+
+        # set home folders
+        self.home_folder = os.path.expanduser('~') + AMEData.FOLDER_NAME
+        self.make_folders()
 
         self.ui_interface = ui_interface
         self.ame_table = []
         self.nubase_table = []
-        self.home_folder = ui_interface.home_folder
+
         self.ame_data_filename = '{}ame.data'.format(self.home_folder)
         self.nubase_data_filename = '{}nubase.data'.format(self.home_folder)
         self.check_for_database()
@@ -72,16 +81,24 @@ class AMEData(object):
         :return:
         """
         if not os.path.exists(self.ame_data_filename) or not os.path.exists(self.nubase_data_filename):
-            response = self.ui_interface.show_message_box(
-                'AME Database files do not exist. Download from AME website into {}?'.format(self.home_folder))
-            if response:
+            if self.ui_interface:
+                response = self.ui_interface.show_message_box(
+                    'AME Database files do not exist. Download from AME website into {}?'.format(self.home_folder))
+                if response:
+                    self.download_ame_data()
+                    self.check_for_database()  # recursive call!
+                else:
+                    return
+            else:  # if no ui interface, just do it, don't ask
                 self.download_ame_data()
                 self.check_for_database()  # recursive call!
-            else:
-                return
+
         else:
-            self.ui_interface.show_message(
-                'AME Database files are available.')
+            if self.ui_interface:
+                self.ui_interface.show_message(
+                    'AME Database files are available.')
+            else:
+                print('AME Database files are available.')
             self.init_ame_db()
             self.init_nubase_db()
 
@@ -118,7 +135,7 @@ class AMEData(object):
         -------
 
         """
-        #p1 = re.compile('(?=[^.])(\D)', re.IGNORECASE)
+        # p1 = re.compile('(?=[^.])(\D)', re.IGNORECASE)
         p2 = re.compile('(\d)', re.IGNORECASE)
         with open(self.nubase_data_filename) as f:
             for line in f:
@@ -126,7 +143,7 @@ class AMEData(object):
                 if len(re.sub(p2, '', name)) == 3:
                     continue
                 lt = line[60:69].strip()
-                #lt = re.sub(p1, '', line[60:69])
+                # lt = re.sub(p1, '', line[60:69])
                 mp = line[69:71].strip()
                 single = [name, lt, AMEData.get_multiplier(mp)]
                 self.nubase_table.append(single)
@@ -217,10 +234,13 @@ class AMEData(object):
             result = 31557600e24
         return result
 
-    # Constants
-
-    AME_DATA_LINK = 'http://amdc.impcas.ac.cn/evaluation/data2012/data/mass.mas12'
-    AME_NUTAB_LINK = 'http://amdc.in2p3.fr/nubase/nubtab12.asc'
+    def make_folders(self):
+        """
+        Checks and makes missing folders in the user's home directory
+        :return:
+        """
+        if not os.path.exists(self.home_folder):
+            os.mkdir(self.home_folder)
 
     #
     # Table of electron binding energies. V.:09.09.2007 (YAL)

@@ -17,7 +17,7 @@ class Ring(object):
 
     def __init__(self, name, circumference):
         self.name = name
-        self.mode = 'std'
+        self.mode = 'std' # iso
         self.circumference = circumference
         self.mag_rigidity = 0.0
         self.acceptance = 0.0

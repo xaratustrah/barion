@@ -37,7 +37,7 @@ class Particle(object):
         self.f_analysis_mhz = 0.0
         self.i_beam_uA = 0.0
         self.lifetime = 0.0
-        self.lifetime_flag = 'unknown'  # stable, less, more, unknown
+        self.lifetime_flag = 'unknown'  # stable, less, more, sys, exp
 
         # variables with tbl in the name are direct readouts form the data file
 
@@ -147,6 +147,9 @@ class Particle(object):
                 elif '>' in lt:
                     self.lifetime_flag = 'more_than'
                     result = float(lt.replace('<', '')) * float(mp)
+                elif '#' in lt:
+                    self.lifetime_flag = 'sys'
+                    result = float(lt.replace('#', '.')) * float(mp)
                 else:
                     result = lt
         return result
