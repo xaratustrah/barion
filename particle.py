@@ -16,6 +16,7 @@ class Particle(object):
     """
     Class Particle describes a valid nuclide
     """
+    FILL_COLOR_STABLE = '#F5A9A9'
 
     def __init__(self, zz, nn, ame_data, ring):
         """
@@ -37,6 +38,7 @@ class Particle(object):
         self.i_beam_uA = 0.0
         self.lifetime = 0.0
         self.lifetime_flag = 'unknown'  # stable, less, more, sys, exp
+        self.chart_fill_color = None
 
         # variables with tbl in the name are direct readouts form the data file
 
@@ -172,12 +174,15 @@ class Particle(object):
             try:
                 result = float(lt) * float(mp)
             except(ValueError):
+                # deal with unwanted characters in the NUBASE
                 if '<' in lt:
                     self.lifetime_flag = 'less_than'
                     result = float(lt.replace('<', '')) * float(mp)
                 elif '>' in lt:
                     self.lifetime_flag = 'more_than'
-                    result = float(lt.replace('<', '')) * float(mp)
+                    result = float(lt.replace('>', '')) * float(mp)
+                elif 'unst' in lt:
+                    self.lifetime_flag = 'p-unst'
                 elif '#' in lt:
                     self.lifetime_flag = 'sys'
                     result = float(lt.replace('#', '.')) * float(mp)
