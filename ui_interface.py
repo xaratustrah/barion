@@ -10,6 +10,7 @@ Mar 2016 Xaratustrah
 """
 
 from abc import ABCMeta, abstractmethod
+import os
 
 
 class UI_Interface(object):
@@ -35,3 +36,11 @@ class UI_Interface(object):
         :return:
         """
         pass
+
+
+class DummyIFace(UI_Interface):
+    def __init__(self):
+        self.home_folder = os.path.expanduser('~') + '/.barion/'
+
+    def show_message(self, msg):
+        print(msg)

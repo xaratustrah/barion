@@ -1,7 +1,6 @@
 """
 Barion
 
--- GUI Application --
 
 Jul 2015 Xaratustrah
 Mar 2016 Xaratustrah
@@ -74,6 +73,38 @@ class Particle(object):
             str(self.qq) + '+, ' + \
             'Z: ' + str(self.tbl_zz) + ', ' + \
             'N: ' + str(self.tbl_nn)
+
+    def get_nuclides(self, zz_min, zz_max, nn_min, nn_max, ee_max):
+        """
+
+        Parameters
+        ----------
+        zz_min
+        zz_max
+        nn_min
+        nn_max
+        qq_max: number of charge states. i.e. 2 means bare and H-like
+
+        Returns: array of particle object
+        -------
+
+        """
+        p_array = []
+        for i in self.ame_data.ame_table:
+            if zz_min <= i[4] <= zz_max:
+                if nn_min <= i[3] <= nn_max:
+                    for eee in range(ee_max):
+                        # create particle
+                        p = Particle(i[4], i[3], self.ame_data, self.ring)
+                        p.qq = i[4] - eee
+                        # give properties of the reference particle
+                        p.ke_u = self.ke_u
+                        p.path_length_m = self.path_length_m
+                        p.f_analysis_mhz = self.f_analysis_mhz
+                        p.i_beam_uA = self.i_beam_uA
+                        # add to array
+                        p_array.append(p)
+        return p_array
 
     def get_isotopes(self):
         """
@@ -214,6 +245,9 @@ class Particle(object):
     def get_electric_rigidity(self):
         return self.get_magnetic_rigidity() * self.get_velocity() / 1.0e3
 
+    def get_neutron_excess_parameter(self):
+        return (self.tbl_nn - self.tbl_zz) / (self.get_atomic_mass_in_u())
+
     # --------------------------------
 
     def get_revolution_frequency(self):
@@ -256,6 +290,8 @@ class Particle(object):
         s += "Ion. Mass.:\t\t{}\t[u]\n".format(self.get_ionic_mass_in_u())
 
         s += "m/Q (ionic):\t\t{}\n".format(self.get_ionic_moq())
+
+        s += "Neutron excess parameter:\t{}\t[1/u]\n".format(self.get_neutron_excess_parameter())
 
         s += "Tot. Kin. Energy:\t{}\t\t[MeV]\n".format(self.get_total_energy_mev())
         s += "gamma:\t\t{}\n".format(self.get_gamma())
@@ -301,6 +337,7 @@ class Particle(object):
              ['Atomic mass:', str(self.get_atomic_mass_in_u()), '[u]'],
              ['Ionic mass:', str(self.get_ionic_mass_in_u()), '[u]'],
              ['Ionic m/Q:', str(self.get_ionic_moq()), '[u]'],
+             ['Neutron Excess Parameter:', str(self.get_neutron_excess_parameter()), '[1/u]'],
              ['Tot. kin. Energy:', str(self.get_total_energy_mev()), '[MeV]'],
              ['gamma:', str(self.get_gamma()), ''],
              ['beta:', str(self.get_beta()), ''], ['beta * gamma:', str(self.get_beta_gamma()), ''],
@@ -323,10 +360,10 @@ class Particle(object):
 
         return s
 
-    # def identify(self, f_actual, f_unknown, range_zz, range_nn, max_ee, accuracy):
+    # def identify(self, f_actual, f_unknown, zz_range, nn_range, ee_max, accuracy):
     #     print(self.ring.get_alpha_p())
 
-    def identify(self, f_actual, f_unknown, range_zz, range_nn, max_ee, accuracy):
+    def identify(self, f_actual, f_unknown, zz_range, nn_range, ee_max, accuracy):
         alpha_p = self.ring.get_alpha_p()
         delta_f = f_actual - f_unknown
         delta_moq = - delta_f / f_actual * self.get_ionic_moq() / alpha_p
@@ -340,10 +377,10 @@ class Particle(object):
         s += 'm/Q of the unknown particle: {}\n'.format(moq_unknown)
         moq_dict = {}
         for i in self.ame_data.ame_table:
-            if i[4] in range(self.tbl_zz - range_zz, self.tbl_zz + range_zz):
-                if i[3] in range(self.tbl_nn - range_nn, self.tbl_nn + range_nn):
+            if i[4] in range(self.tbl_zz - zz_range, self.tbl_zz + zz_range):
+                if i[3] in range(self.tbl_nn - nn_range, self.tbl_nn + nn_range):
                     p = Particle(i[4], i[3], self.ame_data, self.ring)
-                    for eee in range(max_ee):
+                    for eee in range(ee_max):
                         p.qq = i[4] - eee
                         moq_dict[str(p)] = p.get_ionic_moq()
         # s += 'Current particle: ' + str(self) + '\n'
