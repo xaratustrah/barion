@@ -290,9 +290,9 @@ class Particle(object):
 
         s += "\n"
         s += "Calculated:\n-----------\n"
-        s += "Total charge:\t\t{}\t[C]\n".format(self.get_total_charge())
+        s += "Total charge per ion:\t\t{}\t[C]\n".format(self.get_total_charge())
 
-        # s += "Atom. Mass.:\t\t{}\t\t[u]\n".format(self.get_atomic_mass_in_u())
+        s += "Atom. Mass.:\t\t{}\t\t[u]\n".format(self.get_atomic_mass_in_u())
 
         s += "Ion. Mass.:\t\t{}\t[u]\n".format(self.get_ionic_mass_in_u())
 
@@ -340,9 +340,10 @@ class Particle(object):
              ['Beam current:', str(self.i_beam_uA), '[µA]'],
              ['Path length:', str(self.path_length_m), '[m]'],
              ['Analysis freq.:', str(self.f_analysis_mhz), '[MHz]'],
-             ['Total charge:', str(self.get_total_charge()), '[C]'],
+             ['Total charge per ion:', str(self.get_total_charge()), '[C]'],
              ['Atomic mass:', str(self.get_atomic_mass_in_u()), '[u]'],
              ['Ionic mass:', str(self.get_ionic_mass_in_u()), '[u]'],
+             ['Ionic mass:', str(AMEData.to_kg(self.get_ionic_mass_in_u())), '[kg]'],
              ['Ionic m/Q:', str(self.get_ionic_moq()), '[u]'],
              ['Neutron Excess Parameter:', str(self.get_neutron_excess_parameter()), '[1/u]'],
              ['Tot. kin. Energy:', str(self.get_total_energy_mev()), '[MeV]'],
