@@ -36,6 +36,7 @@ class Particle(object):
         self.path_length_m = 0.0
         self.f_analysis_mhz = 0.0
         self.i_beam_uA = 0.0
+        self.revolution_frequency= 0.0
         self.lifetime = 0.0
         self.lifetime_flag = 'unknown'  # stable, less, more, sys, exp
         self.chart_fill_color = None
@@ -101,6 +102,7 @@ class Particle(object):
                         p.qq = i[4] - eee
                         # give properties of the reference particle
                         p.ke_u = self.ke_u
+                        # todo: nicht path length, mass formel hier!
                         p.path_length_m = self.path_length_m
                         p.f_analysis_mhz = self.f_analysis_mhz
                         p.i_beam_uA = self.i_beam_uA
@@ -255,23 +257,23 @@ class Particle(object):
 
     # --------------------------------
 
-    def get_revolution_frequency(self):
-        return self.get_velocity() / self.path_length_m / 1.0e6
+    def calculate_revolution_frequency(self):
+        self.revolution_frequency = self.get_velocity() / self.path_length_m / 1.0e6
 
     def get_number_of_ions(self):
-        return int(self.i_beam_uA / 1.0e6 / self.get_revolution_frequency() / 1.0e6 / self.get_total_charge())
+        return int(self.i_beam_uA / 1.0e6 / self.revolution_frequency / 1.0e6 / self.get_total_charge())
 
     def get_prev_revolution_harmonic(self):
-        return int(self.f_analysis_mhz / self.get_revolution_frequency())
+        return int(self.f_analysis_mhz / self.revolution_frequency)
 
     def get_next_revolution_harmonic(self):
-        return int(self.f_analysis_mhz / self.get_revolution_frequency()) + 1
+        return int(self.f_analysis_mhz / self.revolution_frequency) + 1
 
     def get_prev_peak_frequency(self):
-        return self.get_prev_revolution_harmonic() * self.get_revolution_frequency()
+        return self.get_prev_revolution_harmonic() * self.revolution_frequency
 
     def get_next_peak_frequency(self):
-        return self.get_next_revolution_harmonic() * self.get_revolution_frequency()
+        return self.get_next_revolution_harmonic() * self.revolution_frequency
 
     # --------------------------------
 
@@ -318,7 +320,7 @@ class Particle(object):
         s += "Brho:\t\t{}\t[T/m]\n".format(self.get_magnetic_rigidity())
         s += "Erho:\t\t{}\t[kV]\n".format(self.get_electric_rigidity())
 
-        s += "f_rev:\t\t{}\t[MHz]\n".format(self.get_revolution_frequency())
+        s += "f_rev:\t\t{}\t[MHz]\n".format(self.calculate_revolution_frequency())
         s += "No. of ions:\t\t{}\n".format(self.get_number_of_ions())
 
         s += "Prev. Harmonic:\t{}\n".format(self.get_prev_revolution_harmonic())
@@ -356,7 +358,7 @@ class Particle(object):
              ['Rel. Mom. per Nucl.:', str(self.get_relativistic_momentum_per_u()), '[MeV/c/u]'],
              ['pc:', str(self.get_pc()), '[MeV]'], ['Brho:', str(self.get_magnetic_rigidity()), '[T/m]'],
              ['Erho:', str(self.get_electric_rigidity()), '[kV]'],
-             ['f_rev:', str(self.get_revolution_frequency()), '[MHz]'],
+             ['f_rev:', str(self.calculate_revolution_frequency()), '[MHz]'],
              ['No. of ions:', str(self.get_number_of_ions()), ''],
              ['Prev. harmonic:', str(self.get_prev_revolution_harmonic()), ''],
              ['Expected peak:', str(self.get_prev_peak_frequency()), '[MHz]'],

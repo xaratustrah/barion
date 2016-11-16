@@ -17,7 +17,7 @@ class Ring(object):
 
     def __init__(self, name, circumference):
         self.name = name
-        self.mode = 'std' # iso
+        self.mode = 'std'  # iso
         self.circumference = circumference
         self.mag_rigidity = 0.0
         self.acceptance = 0.0
@@ -30,10 +30,9 @@ class Ring(object):
     def get_ring_dict():
         ring_dic = {}
 
-        esr = Ring('ESR', 108.5)
+        esr = Ring('ESR', 108.36)
         esr.acceptance = 0.024
-        esr.gamma_t = 2.30
-        #esr.gamma_t = 2.44 thoeretical
+        esr.gamma_t = 2.30  # STD Mode: 2.30 or 2.44 theoretical value, ISO: 1.4
         esr.mag_rigidity = 18
         ring_dic['ESR'] = esr
 
@@ -45,7 +44,7 @@ class Ring(object):
         csre.mag_rigidity = 18
         ring_dic['CSRe'] = csre
 
-        ring_dic['CRYRING'] = Ring('CRYRING', 51.63)
+        ring_dic['CRYRING'] = Ring('CRYRING', 54.17)
 
         ring_dic['CSR'] = Ring('CSR', 35)
 
