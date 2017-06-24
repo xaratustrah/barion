@@ -12,7 +12,10 @@
 - Identification of nuclides 
 - Settings of accelerator parameters specially the storage rings
 - Design and analysis of beam monitors specially Schottky detectors
-- And many more...
+- Create nuclidic chart plots
+- and many more...
+
+![barion_chart](https://raw.githubusercontent.com/xaratustrah/barion/master/rsrc/barion_chart.png)
 
 ## License
 
