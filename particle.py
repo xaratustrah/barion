@@ -77,6 +77,9 @@ class Particle(object):
             'Z: ' + str(self.tbl_zz) + ', ' + \
             'N: ' + str(self.tbl_nn)
 
+    def get_short_name(self):
+        return '{}{}{}+'.format(self.tbl_aa, self.tbl_name, self.qq)
+
     def get_all_in_all(self):
         p_array = []
         for entry in self.ame_data.ame_table:
