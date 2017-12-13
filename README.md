@@ -5,7 +5,7 @@
 
 ## About
 
-**barion** is a set of classes and also a graphical user interface written entirely in Python to access information and perform calculations related to (relativistic or non-relativistic) ions and nuclei. In essence, this program provides a convenient interface to the published data on atomic masses in the world famous  **Atomic Mass Evaluation by G. Audi and colleagues** from [G. Audi et al 2012 Chinese Phys. C 36 1287](http://dx.doi.org/10.1088/1674-1137/36/12/003). The name `barion` is a word play between `ion` and `bar` meaning "heavy ion", the latter is a short form of the Greek word `βαρύς` which means heavy (also used in the words such as "isobar").
+**barion** is a set of classes and also a graphical user interface written entirely in Python to access information and perform calculations related to (relativistic or non-relativistic) ions and nuclei. In essence, this program provides a convenient interface to the published data on atomic masses in the world famous [2016-2017 Atomic Mass Evaluation](http://iopscience.iop.org/issue/1674-1137/41/3). The name `barion` is a word play between `ion` and `bar` meaning "heavy ion", the latter is a short form of the Greek word `βαρύς` which means heavy (also used in the words such as "isobar").
 
   Specifically this program can be used in experiments involving mass and lifetime measurements of radioactive ion beams. It can also be used in a variety of applications such as medical radio therapy, astrophysics and fundamental physics research, etc. One can perform
 
