@@ -11,7 +11,8 @@ Mar 2016 Xaratustrah
 
 import fortranformat as ff
 import urllib.request as ur
-import os, re
+import os
+import re
 
 
 class AMEData(object):
@@ -20,8 +21,8 @@ class AMEData(object):
     """
     # Constants
 
-    AME_DATA_LINK = 'http://amdc.impcas.ac.cn/evaluation/data2012/data/mass.mas12'
-    AME_NUTAB_LINK = 'http://amdc.in2p3.fr/nubase/nubtab12.asc'
+    AME_DATA_LINK = 'https://www-nds.iaea.org/amdc/ame2016/mass16.txt'
+    AME_NUTAB_LINK = 'https://www-nds.iaea.org/amdc/ame2016/nubase2016.txt'
     FOLDER_NAME = '/.ame/'
 
     def __init__(self, ui_interface=None):
@@ -153,11 +154,17 @@ class AMEData(object):
         Download the file from internet if not available locally
         :return:
         """
-        g = ur.urlopen(AMEData.AME_DATA_LINK)
+        req = ur.Request(AMEData.AME_DATA_LINK, headers={
+            'User-Agent': "Magic Browser"})
+        g = ur.urlopen(req)
+
+#        g = ur.urlopen(AMEData.AME_DATA_LINK)
         with open(self.home_folder + 'ame.data', 'b+w') as f:
             f.write(g.read())
 
-        g = ur.urlopen(AMEData.AME_NUTAB_LINK)
+        req = ur.Request(AMEData.AME_NUTAB_LINK, headers={
+            'User-Agent': "Magic Browser"})
+        g = ur.urlopen(req)
         with open(self.home_folder + 'nubase.data', 'b+w') as f:
             f.write(g.read())
 
@@ -277,7 +284,6 @@ class AMEData(object):
     # AMEData.ElBiEn[4][4] - AMEData.ElBiEn[4][4-1]
     # second ionization energy:
     # AMEData.ElBiEn[4][4-1] - AMEData.ElBiEn[4][4-2]
-
 
     ElBiEn = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
