@@ -280,6 +280,7 @@ class Particle(object):
 
     def calculate_revolution_frequency(self):
         self.revolution_frequency = self.get_velocity() / self.path_length_m / 1.0e6
+        return self.revolution_frequency
 
     def get_number_of_ions(self):
         return int(self.i_beam_uA / 1.0e6 / self.revolution_frequency / 1.0e6 / self.get_total_charge())
