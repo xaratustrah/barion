@@ -32,11 +32,10 @@ class Particle(object):
         self.ring = ring
 
         # calculated and given values (secondary)
-        self.ke_u = 0.0
+        self.ke_amev = 0.0
         self.path_length_m = 0.0
         self.f_analysis_mhz = 0.0
         self.i_beam_uA = 0.0
-        self.revolution_frequency = 0.0
         self.lifetime = 0.0
         self.lifetime_flag = 'unknown'  # stable, less, more, sys, exp
         self.chart_fill_color = None
@@ -81,13 +80,16 @@ class Particle(object):
         return '{}{}{}+'.format(self.tbl_aa, self.tbl_name, self.qq)
 
     def get_all_in_all(self):
+        """
+        Get all nuclei in all charge states!
+        """
         p_array = []
         for entry in self.ame_data.ame_table:
             for eee in range(entry[4]):
                 p = Particle(entry[4], entry[3], self.ame_data, self.ring)
                 p.qq = entry[4] - eee
                 # give properties of the reference particle
-                p.ke_u = self.ke_u
+                p.ke_amev = self.ke_amev
                 # todo: nicht path length, mass formel hier!
                 p.path_length_m = self.path_length_m
                 p.f_analysis_mhz = self.f_analysis_mhz
@@ -100,7 +102,6 @@ class Particle(object):
 
     def get_nuclides(self, zz_min, zz_max, nn_min, nn_max, ee_max):
         """
-
         Parameters
         ----------
         zz_min
@@ -122,7 +123,7 @@ class Particle(object):
                         p = Particle(i[4], i[3], self.ame_data, self.ring)
                         p.qq = i[4] - eee
                         # give properties of the reference particle
-                        p.ke_u = self.ke_u
+                        p.ke_amev = self.ke_amev
                         # todo: nicht path length, mass formel hier!
                         p.path_length_m = self.path_length_m
                         p.f_analysis_mhz = self.f_analysis_mhz
@@ -214,7 +215,7 @@ class Particle(object):
         return result
 
     # --------------------------------
-    def get_total_charge(self):
+    def get_total_charge_in_coulomb(self):
         return self.qq * AMEData.EE
 
     def get_atomic_mass_in_u(self):
@@ -230,21 +231,19 @@ class Particle(object):
             return self.get_atomic_mass_in_u()
         pass
 
-    def get_ionic_moq(self):
+    def get_ionic_moq_in_u(self):
         return self.get_ionic_mass_in_u() / self.qq
 
     # --------------------------------
 
-    def get_total_energy_mev(self):
-        return self.ke_u * self.tbl_aa
+    def get_total_kinetic_energy_in_mev(self):
+        return self.ke_amev * self.tbl_aa
 
     def get_gamma(self):
-        return self.get_total_energy_mev() / AMEData.to_mev(self.get_ionic_mass_in_u()) + 1.0
+        return self.get_total_kinetic_energy_in_mev() / AMEData.to_mev(self.get_ionic_mass_in_u()) + 1.0
 
     def get_eta(self):
         return (1 / self.get_gamma() ** 2) - (1 / self.ring.gamma_t ** 2)
-
-    # --------------------------------
 
     def get_beta(self):
         return math.sqrt(1.0 - 1.0 / math.pow(self.get_gamma(), 2))
@@ -253,50 +252,74 @@ class Particle(object):
         return self.get_beta() * self.get_gamma()
 
     def get_velocity(self):
+        # return Velocity in m/s
         return self.get_beta() * AMEData.CC
 
     def get_relativistic_mass(self):
+        # return relativistic mass in MeV/c^2
         return AMEData.to_mev(self.get_ionic_mass_in_u()) * self.get_gamma()
 
     def get_relativistic_momentum(self):
+        # return relativistic momentum in MeV/c
         return AMEData.to_mev(self.get_ionic_mass_in_u()) * self.get_gamma() * self.get_beta()
 
     def get_relativistic_momentum_per_u(self):
+        # return relativistic momentum in MeV/c/u
         return self.get_relativistic_momentum() / self.tbl_aa
 
     def get_pc(self):
+        # return pc in MeV
         return self.get_relativistic_momentum() * AMEData.CC
 
     def get_magnetic_rigidity(self):
+        # unit Tm
         return self.get_relativistic_momentum() * 1.0e6 / self.qq / AMEData.CC
 
     def get_electric_rigidity(self):
-        return self.get_magnetic_rigidity() * self.get_velocity() / 1.0e3
+        # unit MJ/Q
+        return self.get_magnetic_rigidity() * self.get_velocity() / 1.0e6
 
     def get_neutron_excess_parameter(self):
         return (self.tbl_nn - self.tbl_zz) / (self.get_atomic_mass_in_u())
 
     # --------------------------------
 
-    def calculate_revolution_frequency(self):
-        self.revolution_frequency = self.get_velocity() / self.path_length_m / 1.0e6
-        return self.revolution_frequency
+    def get_revolution_frequency(self):
+        return self.get_velocity() / self.path_length_m / 1.0e6
 
-    def get_number_of_ions(self):
-        return int(self.i_beam_uA / 1.0e6 / self.revolution_frequency / 1.0e6 / self.get_total_charge())
+    @staticmethod
+    def get_revolution_frequency_from_harmonic(harmonic, measured_freq):
+        return measured_freq / harmonic
 
-    def get_prev_revolution_harmonic(self):
-        return int(self.f_analysis_mhz / self.revolution_frequency)
+    def get_number_of_ions(self, f_rev):
+        return int(self.i_beam_uA / 1.0e6 / f_rev / 1.0e6 / self.get_total_charge_in_coulomb())
 
-    def get_next_revolution_harmonic(self):
-        return int(self.f_analysis_mhz / self.revolution_frequency) + 1
+    def get_prev_revolution_harmonic(self, f_rev):
+        return int(self.f_analysis_mhz / f_rev)
 
-    def get_prev_peak_frequency(self):
-        return self.get_prev_revolution_harmonic() * self.revolution_frequency
+    def get_next_revolution_harmonic(self, f_rev):
+        return int(self.f_analysis_mhz / f_rev) + 1
 
-    def get_next_peak_frequency(self):
-        return self.get_next_revolution_harmonic() * self.revolution_frequency
+    def get_prev_peak_frequency(self, f_rev):
+        return self.get_prev_revolution_harmonic(f_rev) * f_rev
 
+    def get_next_peak_frequency(self, f_rev):
+        return self.get_next_revolution_harmonic(f_rev) * f_rev
+
+    @staticmethod
+    def get_frequency_at_harmnic_in_mhz(f_rev, harmonic):
+        assert int(harmonic) == harmonic
+        return f_rev * harmonic
+
+    @staticmethod
+    def get_frequency_at_harmnic_in_mhz_list(f_rev, harm_min, harm_max):
+        assert int(harm_min) == harm_min
+        assert int(harm_max) == harm_max
+        assert harm_max > harm_min
+        lst = []
+        for i in range(harm_min, harm_max):
+            lst.append([i, Particle.get_frequency_at_harmnic_in_mhz(f_rev, i)])
+        return lst
     # --------------------------------
 
     def calculate_from_energy(self):
@@ -306,7 +329,7 @@ class Particle(object):
         s += "n= {}\n".format(self.tbl_nn)
         s += 'Source: {source} \n'.format(
             source='** EXP **' if self.exp else '** SYS **')
-        s += "Kin. Energy:\t\t{}\t\t[MeV/u]\n".format(self.ke_u)
+        s += "Kin. Energy:\t\t{}\t\t[MeV/u]\n".format(self.ke_amev)
         s += "Beam current:\t{}\t\t[µA]\n".format(self.i_beam_uA)
         s += "Path length:\t\t{}\t\t[m]\n".format(self.path_length_m)
         s += "Analysis freq.:\t{}\t\t[MHz]\n".format(self.f_analysis_mhz)
@@ -314,19 +337,19 @@ class Particle(object):
         s += "\n"
         s += "Calculated:\n-----------\n"
         s += "Total charge per ion:\t\t{}\t[C]\n".format(
-            self.get_total_charge())
+            self.get_total_charge_in_coulomb())
 
         s += "Atom. Mass.:\t\t{}\t\t[u]\n".format(self.get_atomic_mass_in_u())
 
         s += "Ion. Mass.:\t\t{}\t[u]\n".format(self.get_ionic_mass_in_u())
 
-        s += "m/Q (ionic):\t\t{}\n".format(self.get_ionic_moq())
+        s += "m/Q (ionic):\t\t{}\n".format(self.get_ionic_moq_in_u())
 
         s += "Neutron excess parameter:\t{}\t[1/u]\n".format(
             self.get_neutron_excess_parameter())
 
         s += "Tot. Kin. Energy:\t{}\t\t[MeV]\n".format(
-            self.get_total_energy_mev())
+            self.get_total_kinetic_energy_in_mev())
         s += "gamma:\t\t{}\n".format(self.get_gamma())
         s += "beta:\t\t{}\n".format(self.get_beta())
         s += "beta * gamma:\t{}\n".format(self.get_beta_gamma())
@@ -347,19 +370,21 @@ class Particle(object):
         s += "pc:\t\t{}\t[MeV]\n".format(self.get_pc())
 
         s += "Brho:\t\t{}\t[T/m]\n".format(self.get_magnetic_rigidity())
-        s += "Erho:\t\t{}\t[kV]\n".format(self.get_electric_rigidity())
+        s += "Erho:\t\t{}\t[MJ/C]\n".format(self.get_electric_rigidity())
 
         s += "f_rev:\t\t{}\t[MHz]\n".format(
-            self.calculate_revolution_frequency())
-        s += "No. of ions:\t\t{}\n".format(self.get_number_of_ions())
+            self.get_revolution_frequency())
+        s += "No. of ions:\t\t{}\n".format(
+            self.get_number_of_ions(self.get_revolution_frequency()))
 
         s += "Prev. Harmonic:\t{}\n".format(
-            self.get_prev_revolution_harmonic())
+            self.get_prev_revolution_harmonic(self.get_revolution_frequency()))
         s += "Expected peak freq.:\t{}\t[MHz]\n".format(
-            self.get_prev_peak_frequency())
-        s += "Next Harmonic:\t{}\n".format(self.get_next_revolution_harmonic())
+            self.get_prev_peak_frequency(self.get_revolution_frequency()))
+        s += "Next Harmonic:\t{}\n".format(
+            self.get_next_revolution_harmonic(self.get_revolution_frequency()))
         s += "Expected peak freq.:\t{}\t[MHz]\n".format(
-            self.get_next_peak_frequency())
+            self.get_next_peak_frequency(self.get_revolution_frequency()))
 
         return s
 
@@ -370,19 +395,21 @@ class Particle(object):
              ['N:', str(self.tbl_nn), ''],
              ['Source:', '{source}'.format(
                  source='** EXP **' if self.exp else '** SYS **'), ''],
-             ['Kinetic energy:', str(self.ke_u), '[MeV/u]'],
+             ['Kinetic energy:', str(self.ke_amev), '[MeV/u]'],
              ['Beam current:', str(self.i_beam_uA), '[µA]'],
              ['Path length:', str(self.path_length_m), '[m]'],
              ['Analysis freq.:', str(self.f_analysis_mhz), '[MHz]'],
-             ['Total charge per ion:', str(self.get_total_charge()), '[C]'],
+             ['Total charge per ion:', str(
+                 self.get_total_charge_in_coulomb()), '[C]'],
              ['Atomic mass:', str(self.get_atomic_mass_in_u()), '[u]'],
              ['Ionic mass:', str(self.get_ionic_mass_in_u()), '[u]'],
              ['Ionic mass:', str(AMEData.to_kg(
                  self.get_ionic_mass_in_u())), '[kg]'],
-             ['Ionic m/Q:', str(self.get_ionic_moq()), '[u]'],
+             ['Ionic m/Q:', str(self.get_ionic_moq_in_u()), '[u]'],
              ['Neutron Excess Parameter:', str(
                  self.get_neutron_excess_parameter()), '[1/u]'],
-             ['Tot. kin. Energy:', str(self.get_total_energy_mev()), '[MeV]'],
+             ['Tot. kin. Energy:', str(
+                 self.get_total_kinetic_energy_in_mev()), '[MeV]'],
              ['gamma:', str(self.get_gamma()), ''],
              ['beta:', str(self.get_beta()), ''], [
             'beta * gamma:', str(self.get_beta_gamma()), ''],
@@ -398,30 +425,31 @@ class Particle(object):
                 self.get_relativistic_momentum_per_u()), '[MeV/c/u]'],
             ['pc:', str(self.get_pc()), '[MeV]'], [
             'Brho:', str(self.get_magnetic_rigidity()), '[T/m]'],
-            ['Erho:', str(self.get_electric_rigidity()), '[kV]'],
-            ['f_rev:', str(self.calculate_revolution_frequency()), '[MHz]'],
-            ['No. of ions:', str(self.get_number_of_ions()), ''],
-            ['Prev. harmonic:', str(self.get_prev_revolution_harmonic()), ''],
-            ['Expected peak:', str(self.get_prev_peak_frequency()), '[MHz]'],
-            ['Next harmonic:', str(self.get_next_revolution_harmonic()), ''],
-            ['Expected peak:', str(self.get_next_peak_frequency()), '[MHz]']]
+            ['Erho:', str(self.get_electric_rigidity()), '[MJ/C]'],
+            ['f_rev:', str(self.get_revolution_frequency()), '[MHz]'],
+            ['No. of ions:', str(self.get_number_of_ions(
+                self.get_revolution_frequency())), ''],
+            ['Prev. harmonic:', str(self.get_prev_revolution_harmonic(
+                self.get_revolution_frequency())), ''],
+            ['Expected peak:', str(self.get_prev_peak_frequency(
+                self.get_revolution_frequency())), '[MHz]'],
+            ['Next harmonic:', str(self.get_next_revolution_harmonic(
+                self.get_revolution_frequency())), ''],
+            ['Expected peak:', str(self.get_next_peak_frequency(self.get_revolution_frequency())), '[MHz]']]
 
         return s
 
-    # def identify(self, f_actual, f_unknown, zz_range, nn_range, ee_max, accuracy):
-    #     print(self.ring.get_alpha_p())
-
-    def identify(self, f_actual, f_unknown, zz_range, nn_range, ee_max, accuracy):
+    def identify_str(self, f_p_ref, f_p_unknown, zz_range, nn_range, ee_max, accuracy):
         alpha_p = self.ring.get_alpha_p()
-        delta_f = f_actual - f_unknown
-        delta_moq = - delta_f / f_actual * self.get_ionic_moq() / alpha_p
-        moq_unknown = self.get_ionic_moq() - delta_moq
+        delta_f = f_p_ref - f_p_unknown
+        delta_moq = - delta_f / f_p_ref * self.get_ionic_moq_in_u() / alpha_p
+        moq_unknown = self.get_ionic_moq_in_u() - delta_moq
         s = "Ring: {}\n".format(self.ring.name)
         s += 'gamma_t: {}\n'.format(self.ring.gamma_t)
         s += 'alpha_p: {}\n'.format(self.ring.get_alpha_p())
         s += 'mode: {}\n'.format(self.ring.mode)
         # s += "delta_moq: {}\n".format(delta_moq)
-        # s += 'moq:{}\n'.format(self.get_ionic_moq())
+        # s += 'moq:{}\n'.format(self.get_ionic_moq_in_u())
         s += 'm/Q of the unknown particle: {}\n'.format(moq_unknown)
         moq_dict = {}
         for i in self.ame_data.ame_table:
@@ -430,7 +458,7 @@ class Particle(object):
                     p = Particle(i[4], i[3], self.ame_data, self.ring)
                     for eee in range(ee_max):
                         p.qq = i[4] - eee
-                        moq_dict[str(p)] = p.get_ionic_moq()
+                        moq_dict[str(p)] = p.get_ionic_moq_in_u()
         # s += 'Current particle: ' + str(self) + '\n'
         s += '\n'
         s += 'Candidates are: \n'
@@ -446,3 +474,39 @@ class Particle(object):
         s += "\n"
 
         return s
+
+    def get_moq_unknown_from_freq(self, frev_p_ref, frev_p_unknown):
+        alpha_p = self.ring.get_alpha_p()
+        delta_f = frev_p_ref - frev_p_unknown
+        delta_moq = - delta_f / frev_p_ref * self.get_ionic_moq_in_u() / alpha_p
+        moq_unknown = self.get_ionic_moq_in_u() - delta_moq
+        return moq_unknown
+
+    def identify(self, f_p_ref, f_p_unknown, zz_range, nn_range, ee_max, accuracy):
+        alpha_p = self.ring.get_alpha_p()
+        delta_f = f_p_ref - f_p_unknown
+        delta_moq = - delta_f / f_p_ref * self.get_ionic_moq_in_u() / alpha_p
+        moq_unknown = self.get_ionic_moq_in_u() - delta_moq
+        moq_dict = {}
+        for i in self.ame_data.ame_table:
+            if i[4] in range(self.tbl_zz - zz_range, self.tbl_zz + zz_range):
+                if i[3] in range(self.tbl_nn - nn_range, self.tbl_nn + nn_range):
+                    p = Particle(i[4], i[3], self.ame_data, self.ring)
+                    for eee in range(ee_max):
+                        p.qq = i[4] - eee
+                        moq_dict[str(p)] = p.get_ionic_moq_in_u()
+        candidates = [k for (k, v) in moq_dict.items()
+                      if abs(v - moq_unknown) <= accuracy]
+        if str(self) in candidates:
+            candidates.remove(str(self))
+        return candidates
+
+    def identify_search(self, f_p_ref, f_p_unknown, zz_range, nn_range, ee_max):
+        accuracy = 1e-6
+        while True:
+            s = self.identify(
+                f_p_ref, f_p_unknown, zz_range, nn_range, ee_max, accuracy)
+            if s:
+                break
+            accuracy += 1e-6
+        return s[0]

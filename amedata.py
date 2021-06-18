@@ -21,8 +21,14 @@ class AMEData(object):
     """
     # Constants
 
-    AME_DATA_LINK = 'https://www-nds.iaea.org/amdc/ame2016/mass16.txt'
-    AME_NUTAB_LINK = 'https://www-nds.iaea.org/amdc/ame2016/nubase2016.txt'
+    # AME2016
+    #AME_DATA_LINK = 'https://www-nds.iaea.org/amdc/ame2016/mass16.txt'
+    #AME_NUTAB_LINK = 'https://www-nds.iaea.org/amdc/ame2016/nubase2016.txt'
+
+    # AME2020
+    AME_DATA_LINK = 'https://www-nds.iaea.org/amdc/ame2020/mass_1.mas20.txt'
+    AME_NUTAB_LINK = 'https://www-nds.iaea.org/amdc/ame2020/nubase_3.mas20.txt'
+
     FOLDER_NAME = '/.ame/'
 
     def __init__(self, ui_interface=None):
@@ -108,12 +114,18 @@ class AMEData(object):
         Read and initiate the database from file into memory
         :return:
         """
-        # here we add one more field at the beginning to determine experimental or systematic nuclei
+        # here we add one more field "a4" at the beginning to determine experimental or systematic nuclei
 
+        # AME2016 reader
+        # ffline = ff.FortranRecordReader(
+        #    '(a4,a1,i3,i5,i5,i5,1x,a3,a4,1x,f13.5,f11.5,f11.3,f9.3,1x,a2,f11.3,f9.3,1x,i3,1x,f12.5,f11.5)')
+
+        # AME2020 reader
         ffline = ff.FortranRecordReader(
-            '(a4,a1,i3,i5,i5,i5,1x,a3,a4,1x,f13.5,f11.5,f11.3,f9.3,1x,a2,f11.3,f9.3,1x,i3,1x,f12.5,f11.5)')
+            '(a4,a1,i3,i5,i5,i5,1x,a3,a4,1x,f14.6,f12.6,f13.5,1x,f10.5,1x,a2,f13.5,f11.5,1x,i3,1x,f13.6,f12.6)')
+
         with open(self.ame_data_filename) as f:
-            for _ in range(39):
+            for _ in range(36):  # skip first 36 lines for AME2020, first 39 lines for AME2016
                 next(f)
             for line in f:
                 if '*' in line:
@@ -136,16 +148,16 @@ class AMEData(object):
         -------
 
         """
-        # p1 = re.compile('(?=[^.])(\D)', re.IGNORECASE)
-        p2 = re.compile('(\d)', re.IGNORECASE)
         with open(self.nubase_data_filename) as f:
+            for _ in range(25):  # skip first 25 lines for nubase2020, no lines for nubase2016
+                next(f)
             for line in f:
-                name = line[11:18].strip()
-                if len(re.sub(p2, '', name)) == 3:
+                name = line[11:16].strip()
+                isomer = line[16:17].strip()
+                if isomer != '':
                     continue
-                lt = line[60:69].strip()
-                # lt = re.sub(p1, '', line[60:69])
-                mp = line[69:71].strip()
+                lt = line[69:77].strip()
+                mp = line[78:80].strip()
                 single = [name, lt, AMEData.get_multiplier(mp)]
                 self.nubase_table.append(single)
 
