@@ -439,6 +439,43 @@ class Particle(object):
 
         return s
 
+        def get_moq_unknown_from_freq(self, frev_p_ref, frev_p_unknown):
+        alpha_p = self.ring.get_alpha_p()
+        delta_f = frev_p_ref - frev_p_unknown
+        delta_moq = - delta_f / frev_p_ref * self.get_ionic_moq_in_u() / alpha_p
+        moq_unknown = self.get_ionic_moq_in_u() - delta_moq
+        return moq_unknown
+
+    def identify(self, f_p_ref, f_p_unknown, zz_range, nn_range, ee_max, accuracy):
+        # alpha_p = self.ring.get_alpha_p()
+        # delta_f = f_p_ref - f_p_unknown
+        # delta_moq = - delta_f / f_p_ref * self.get_ionic_moq_in_u() / alpha_p
+        # moq_unknown = self.get_ionic_moq_in_u() - delta_moq
+        moq_unknown = self.get_moq_unknown_from_freq(f_p_ref, f_p_unknown)
+        moq_dict = {}
+        for i in self.ame_data.ame_table:
+            if i[4] in range(self.tbl_zz - zz_range, self.tbl_zz + zz_range):
+                if i[3] in range(self.tbl_nn - nn_range, self.tbl_nn + nn_range):
+                    p = Particle(i[4], i[3], self.ame_data, self.ring)
+                    for eee in range(ee_max):
+                        p.qq = i[4] - eee
+                        moq_dict[str(p)] = p.get_ionic_moq_in_u()
+        candidates = [k for (k, v) in moq_dict.items()
+                      if abs(v - moq_unknown) <= accuracy]
+        if str(self) in candidates:
+            candidates.remove(str(self))
+        return candidates
+
+    def identify_search(self, f_p_ref, f_p_unknown, zz_range, nn_range, ee_max):
+        accuracy = 1e-6
+        while True:
+            s = self.identify(
+                f_p_ref, f_p_unknown, zz_range, nn_range, ee_max, accuracy)
+            if s:
+                break
+            accuracy += 1e-6
+        return s[0]
+
     def identify_str(self, f_p_ref, f_p_unknown, zz_range, nn_range, ee_max, accuracy):
         alpha_p = self.ring.get_alpha_p()
         delta_f = f_p_ref - f_p_unknown
@@ -474,39 +511,3 @@ class Particle(object):
         s += "\n"
 
         return s
-
-    def get_moq_unknown_from_freq(self, frev_p_ref, frev_p_unknown):
-        alpha_p = self.ring.get_alpha_p()
-        delta_f = frev_p_ref - frev_p_unknown
-        delta_moq = - delta_f / frev_p_ref * self.get_ionic_moq_in_u() / alpha_p
-        moq_unknown = self.get_ionic_moq_in_u() - delta_moq
-        return moq_unknown
-
-    def identify(self, f_p_ref, f_p_unknown, zz_range, nn_range, ee_max, accuracy):
-        alpha_p = self.ring.get_alpha_p()
-        delta_f = f_p_ref - f_p_unknown
-        delta_moq = - delta_f / f_p_ref * self.get_ionic_moq_in_u() / alpha_p
-        moq_unknown = self.get_ionic_moq_in_u() - delta_moq
-        moq_dict = {}
-        for i in self.ame_data.ame_table:
-            if i[4] in range(self.tbl_zz - zz_range, self.tbl_zz + zz_range):
-                if i[3] in range(self.tbl_nn - nn_range, self.tbl_nn + nn_range):
-                    p = Particle(i[4], i[3], self.ame_data, self.ring)
-                    for eee in range(ee_max):
-                        p.qq = i[4] - eee
-                        moq_dict[str(p)] = p.get_ionic_moq_in_u()
-        candidates = [k for (k, v) in moq_dict.items()
-                      if abs(v - moq_unknown) <= accuracy]
-        if str(self) in candidates:
-            candidates.remove(str(self))
-        return candidates
-
-    def identify_search(self, f_p_ref, f_p_unknown, zz_range, nn_range, ee_max):
-        accuracy = 1e-6
-        while True:
-            s = self.identify(
-                f_p_ref, f_p_unknown, zz_range, nn_range, ee_max, accuracy)
-            if s:
-                break
-            accuracy += 1e-6
-        return s[0]
