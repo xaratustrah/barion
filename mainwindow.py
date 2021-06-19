@@ -79,7 +79,8 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.actionClear_results.triggered.connect(self.on_pushButton_clear)
         self.actionSave_results.triggered.connect(self.save_file_dialog)
         self.actionCalculate.triggered.connect(self.on_pushButton_calculate)
-        self.actionShow_table_data.triggered.connect(self.on_pushButton_table_data)
+        self.actionShow_table_data.triggered.connect(
+            self.on_pushButton_table_data)
         self.actionIdentify.triggered.connect(self.on_pushButton_identify)
         self.actionIsotopes.triggered.connect(self.show_isotopes)
         self.actionIsobars.triggered.connect(self.show_isobars)
@@ -89,14 +90,16 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.actionAbout.triggered.connect(self.show_about_dialog)
         self.actionQuit.triggered.connect(QCoreApplication.instance().quit)
 
-        self.pushButton_copy_table.clicked.connect(self.on_pushButton_copy_table)
+        self.pushButton_copy_table.clicked.connect(
+            self.on_pushButton_copy_table)
         self.pushButton_clear.clicked.connect(self.on_pushButton_clear)
         self.pushButton_isotopes.clicked.connect(self.show_isotopes)
         self.pushButton_isotones.clicked.connect(self.show_isotones)
         self.pushButton_isobars.clicked.connect(self.show_isobars)
         self.pushButton_save.clicked.connect(self.save_file_dialog)
         self.pushButton_calculate.clicked.connect(self.on_pushButton_calculate)
-        self.pushButton_table_data.clicked.connect(self.on_pushButton_table_data)
+        self.pushButton_table_data.clicked.connect(
+            self.on_pushButton_table_data)
         self.pushButton_identify.clicked.connect(self.on_pushButton_identify)
 
         self.pushButton_nav_n.clicked.connect(self.on_nav_n_pressed)
@@ -112,14 +115,17 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.spinBox_nn.valueChanged.connect(self.on_spinBox_nn_changed)
         self.spinBox_zz.valueChanged.connect(self.on_spinBox_zz_changed)
 
-        self.comboBox_name.currentIndexChanged.connect(self.on_comboBox_name_changed)
-        self.comboBox_ring.currentIndexChanged.connect(self.on_comboBox_ring_changed)
+        self.comboBox_name.currentIndexChanged.connect(
+            self.on_comboBox_name_changed)
+        self.comboBox_ring.currentIndexChanged.connect(
+            self.on_comboBox_ring_changed)
 
     def show_about_dialog(self):
         about_dialog = QDialog()
         about_dialog.ui = Ui_AbooutDialog()
         about_dialog.ui.setupUi(about_dialog)
-        about_dialog.ui.label_version.setText('Version: {}'.format(__version__))
+        about_dialog.ui.label_version.setText(
+            'Version: {}'.format(__version__))
         about_dialog.exec_()
         about_dialog.show()
 
@@ -156,7 +162,8 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         """
         self.reinit_particle()
         p_array = self.particle.get_isotopes()
-        text = 'Isotopes of {} are:\n'.format(self.particle) + '\n'.join(map(str, p_array)) + '\n'
+        text = 'Isotopes of {} are:\n'.format(
+            self.particle) + '\n'.join(map(str, p_array)) + '\n'
         self.plainTextEdit.appendPlainText(text)
 
     def show_isotones(self):
@@ -166,7 +173,8 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         :return:
         """
         self.reinit_particle()
-        text = 'Isotones of {} are:\n'.format(self.particle) + '\n'.join(map(str, self.particle.get_isotones())) + '\n'
+        text = 'Isotones of {} are:\n'.format(
+            self.particle) + '\n'.join(map(str, self.particle.get_isotones())) + '\n'
         self.plainTextEdit.appendPlainText(text)
 
     def show_isobars(self):
@@ -176,7 +184,8 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         :return:
         """
         self.reinit_particle()
-        text = 'Isobars of {} are:\n'.format(self.particle) + '\n'.join(map(str, self.particle.get_isobars())) + '\n'
+        text = 'Isobars of {} are:\n'.format(
+            self.particle) + '\n'.join(map(str, self.particle.get_isobars())) + '\n'
         self.plainTextEdit.appendPlainText(text)
 
     def save_file_dialog(self):
@@ -231,9 +240,10 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
             # Here make a particle
             zz = self.spinBox_zz.value()
             nn = self.spinBox_nn.value()
-            self.particle = Particle(zz, nn, self.ame_data, self.ring_dict[self.current_ring_name])
+            self.particle = Particle(
+                zz, nn, self.ame_data, self.ring_dict[self.current_ring_name])
             self.particle.qq = self.spinBox_qq.value()
-            self.particle.ke_u = self.doubleSpinBox_energy.value()
+            self.particle.ke_amev = self.doubleSpinBox_energy.value()
             self.particle.i_beam_uA = self.doubleSpinBox_beam_current.value()
             self.particle.f_analysis_mhz = self.doubleSpinBox_f_analysis.value()
             if not self.checkBox_circum.isChecked():
@@ -331,7 +341,8 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
             self.show_message('Not a valid nuclide.')
 
     def on_pushButton_copy_table(self):
-        self.plainTextEdit.appendPlainText(self.particle.calculate_from_energy())
+        self.plainTextEdit.appendPlainText(
+            self.particle.calculate_from_energy())
 
     def on_pushButton_table_data(self):
         """
@@ -348,7 +359,8 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
             f_actual = float(self.lineEdit_f_actual.text())
             f_unknown = float(self.lineEdit_f_unknown.text())
         except(ValueError):
-            self.show_message('Please enter valid frequencies in the text field.')
+            self.show_message(
+                'Please enter valid frequencies in the text field.')
             return
 
         range_zz = self.spinBox_range_zz.value()
@@ -358,7 +370,8 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         self.plainTextEdit.appendPlainText(
             self.particle.identify(float(f_actual), float(f_unknown), range_zz, range_nn, max_ee, accuracy))
 
-        self.show_message('You may narrow your search either by reducing search area or the sensitivity radius.')
+        self.show_message(
+            'You may narrow your search either by reducing search area or the sensitivity radius.')
 
     def on_nav_n_pressed(self):
         """

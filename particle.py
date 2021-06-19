@@ -411,35 +411,35 @@ class Particle(object):
              ['Tot. kin. Energy:', str(
                  self.get_total_kinetic_energy_in_mev()), '[MeV]'],
              ['gamma:', str(self.get_gamma()), ''],
-             ['beta:', str(self.get_beta()), ''], [
-            'beta * gamma:', str(self.get_beta_gamma()), ''],
-            ['Velocity:', str(self.get_velocity()), '[m/s]'],
-            ['eta:', str(self.get_eta()), ''],
-            ['', str(AMEData.get_kmh(self.get_velocity())), '[km/h]'],
-            ['Rel. mass:', str(self.get_relativistic_mass()), '[MeV/c^2]'],
-            ['', str(AMEData.to_u(self.get_relativistic_mass())), '[u]'],
-            ['', str(AMEData.to_kg(self.get_relativistic_mass())), '[kg]'],
-            ['Rel. Momentum:', str(
-                self.get_relativistic_momentum()), '[MeV/c]'],
-            ['Rel. Mom. per Nucl.:', str(
-                self.get_relativistic_momentum_per_u()), '[MeV/c/u]'],
-            ['pc:', str(self.get_pc()), '[MeV]'], [
-            'Brho:', str(self.get_magnetic_rigidity()), '[T/m]'],
-            ['Erho:', str(self.get_electric_rigidity()), '[MJ/C]'],
-            ['f_rev:', str(self.get_revolution_frequency()), '[MHz]'],
-            ['No. of ions:', str(self.get_number_of_ions(
-                self.get_revolution_frequency())), ''],
-            ['Prev. harmonic:', str(self.get_prev_revolution_harmonic(
-                self.get_revolution_frequency())), ''],
-            ['Expected peak:', str(self.get_prev_peak_frequency(
-                self.get_revolution_frequency())), '[MHz]'],
-            ['Next harmonic:', str(self.get_next_revolution_harmonic(
-                self.get_revolution_frequency())), ''],
-            ['Expected peak:', str(self.get_next_peak_frequency(self.get_revolution_frequency())), '[MHz]']]
+             ['beta:', str(self.get_beta()), ''],
+             ['beta * gamma:', str(self.get_beta_gamma()), ''],
+             ['Velocity:', str(self.get_velocity()), '[m/s]'],
+             ['eta:', str(self.get_eta()), ''],
+             ['', str(AMEData.get_kmh(self.get_velocity())), '[km/h]'],
+             ['Rel. mass:', str(self.get_relativistic_mass()), '[MeV/c^2]'],
+             ['', str(AMEData.to_u(self.get_relativistic_mass())), '[u]'],
+             ['', str(AMEData.to_kg(self.get_relativistic_mass())), '[kg]'],
+             ['Rel. Momentum:', str(
+                 self.get_relativistic_momentum()), '[MeV/c]'],
+             ['Rel. Mom. per Nucl.:', str(
+                 self.get_relativistic_momentum_per_u()), '[MeV/c/u]'],
+             ['pc:', str(self.get_pc()), '[MeV]'],
+             ['Brho:', str(self.get_magnetic_rigidity()), '[T/m]'],
+             ['Erho:', str(self.get_electric_rigidity()), '[MJ/C]'],
+             ['f_rev:', str(self.get_revolution_frequency()), '[MHz]'],
+             ['No. of ions:', str(self.get_number_of_ions(
+                 self.get_revolution_frequency())), ''],
+             ['Prev. harmonic:', str(self.get_prev_revolution_harmonic(
+                 self.get_revolution_frequency())), ''],
+             ['Expected peak:', str(self.get_prev_peak_frequency(
+                 self.get_revolution_frequency())), '[MHz]'],
+             ['Next harmonic:', str(self.get_next_revolution_harmonic(
+                 self.get_revolution_frequency())), ''],
+             ['Expected peak:', str(self.get_next_peak_frequency(self.get_revolution_frequency())), '[MHz]']]
 
         return s
 
-        def get_moq_unknown_from_freq(self, frev_p_ref, frev_p_unknown):
+    def get_moq_unknown_from_freq(self, frev_p_ref, frev_p_unknown):
         alpha_p = self.ring.get_alpha_p()
         delta_f = frev_p_ref - frev_p_unknown
         delta_moq = - delta_f / frev_p_ref * self.get_ionic_moq_in_u() / alpha_p
