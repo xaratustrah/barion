@@ -370,7 +370,7 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
         max_ee = self.spinBox_max_ee.value()
         accuracy = self.doubleSpinBox_accuracy.value()
         self.plainTextEdit.appendPlainText(
-            self.particle.identify(float(f_actual), float(f_unknown), range_zz, range_nn, max_ee, accuracy))
+            self.particle.identify_search(float(f_actual), float(f_unknown), range_zz, range_nn, max_ee))
 
         self.show_message(
             'You may narrow your search either by reducing search area or the sensitivity radius.')

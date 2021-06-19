@@ -391,10 +391,6 @@ class Particle(object):
         return moq_unknown
 
     def identify(self, f_p_ref, f_p_unknown, zz_range, nn_range, ee_max, accuracy):
-        # alpha_p = self.ring.get_alpha_p()
-        # delta_f = f_p_ref - f_p_unknown
-        # delta_moq = - delta_f / f_p_ref * self.get_ionic_moq_in_u() / alpha_p
-        # moq_unknown = self.get_ionic_moq_in_u() - delta_moq
         moq_unknown = self.get_moq_unknown_from_freq(f_p_ref, f_p_unknown)
         moq_dict = {}
         for i in self.ame_data.ame_table:
@@ -419,39 +415,3 @@ class Particle(object):
                 break
             accuracy += 1e-6
         return s[0]
-
-    def identify_str(self, f_p_ref, f_p_unknown, zz_range, nn_range, ee_max, accuracy):
-        alpha_p = self.ring.get_alpha_p()
-        delta_f = f_p_ref - f_p_unknown
-        delta_moq = - delta_f / f_p_ref * self.get_ionic_moq_in_u() / alpha_p
-        moq_unknown = self.get_ionic_moq_in_u() - delta_moq
-        s = "Ring: {}\n".format(self.ring.name)
-        s += 'gamma_t: {}\n'.format(self.ring.gamma_t)
-        s += 'alpha_p: {}\n'.format(self.ring.get_alpha_p())
-        s += 'mode: {}\n'.format(self.ring.mode)
-        # s += "delta_moq: {}\n".format(delta_moq)
-        # s += 'moq:{}\n'.format(self.get_ionic_moq_in_u())
-        s += 'm/Q of the unknown particle: {}\n'.format(moq_unknown)
-        moq_dict = {}
-        for i in self.ame_data.ame_table:
-            if i[4] in range(self.tbl_zz - zz_range, self.tbl_zz + zz_range):
-                if i[3] in range(self.tbl_nn - nn_range, self.tbl_nn + nn_range):
-                    p = Particle(i[4], i[3], self.ame_data, self.ring)
-                    for eee in range(ee_max):
-                        p.qq = i[4] - eee
-                        moq_dict[str(p)] = p.get_ionic_moq_in_u()
-        # s += 'Current particle: ' + str(self) + '\n'
-        s += '\n'
-        s += 'Candidates are: \n'
-        candidates = [k for (k, v) in moq_dict.items()
-                      if abs(v - moq_unknown) <= accuracy]
-        # s += str(
-        #    [k for k, v in moq_dict.items() if v == min(moq_dict.values(), key=lambda x: abs(x - moq_unknown))][0])
-
-        if str(self) in candidates:
-            candidates.remove(str(self))
-
-        s += '\n'.join(candidates)
-        s += "\n"
-
-        return s
