@@ -342,7 +342,9 @@ class mainWindow(QMainWindow, Ui_MainWindow, UI_Interface):
 
     def on_pushButton_copy_table(self):
         self.plainTextEdit.appendPlainText(
-            self.particle.calculate_from_energy())
+            Particle.convert_table_to_str(
+                self.particle.calculate_from_energy_list()
+            ))
 
     def on_pushButton_table_data(self):
         """

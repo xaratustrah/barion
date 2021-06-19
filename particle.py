@@ -322,70 +322,14 @@ class Particle(object):
         return lst
     # --------------------------------
 
-    def calculate_from_energy(self):
-        s = "Given:\n------\n"
-        s += "{} {} {}+\n".format(self.tbl_aa, self.tbl_name, self.qq)
-        s += "z= {}, ".format(self.tbl_zz)
-        s += "n= {}\n".format(self.tbl_nn)
-        s += 'Source: {source} \n'.format(
-            source='** EXP **' if self.exp else '** SYS **')
-        s += "Kin. Energy:\t\t{}\t\t[MeV/u]\n".format(self.ke_amev)
-        s += "Beam current:\t{}\t\t[µA]\n".format(self.i_beam_uA)
-        s += "Path length:\t\t{}\t\t[m]\n".format(self.path_length_m)
-        s += "Analysis freq.:\t{}\t\t[MHz]\n".format(self.f_analysis_mhz)
-
-        s += "\n"
-        s += "Calculated:\n-----------\n"
-        s += "Total charge per ion:\t\t{}\t[C]\n".format(
-            self.get_total_charge_in_coulomb())
-
-        s += "Atom. Mass.:\t\t{}\t\t[u]\n".format(self.get_atomic_mass_in_u())
-
-        s += "Ion. Mass.:\t\t{}\t[u]\n".format(self.get_ionic_mass_in_u())
-
-        s += "m/Q (ionic):\t\t{}\n".format(self.get_ionic_moq_in_u())
-
-        s += "Neutron excess parameter:\t{}\t[1/u]\n".format(
-            self.get_neutron_excess_parameter())
-
-        s += "Tot. Kin. Energy:\t{}\t\t[MeV]\n".format(
-            self.get_total_kinetic_energy_in_mev())
-        s += "gamma:\t\t{}\n".format(self.get_gamma())
-        s += "beta:\t\t{}\n".format(self.get_beta())
-        s += "beta * gamma:\t{}\n".format(self.get_beta_gamma())
-        s += "Velocity:\t\t{}\t[m/s]\n".format(self.get_velocity())
-        s += "\t\t{}\t[km/h]\n".format(AMEData.get_kmh(self.get_velocity()))
-
-        s += "eta:\t\t{}\n".format(self.get_eta())
-
-        s += "Relativistic mass:\t{}\t[MeV/c^2]\n".format(
-            self.get_relativistic_mass())
-        s += "\t\t{}\t[u]\n".format(AMEData.to_u(self.get_relativistic_mass()))
-
-        s += "Rel. momentum:\t{}\t[MeV/c]\n".format(
-            self.get_relativistic_momentum())
-        s += "Rel. mom. per Nuc.:\t{}\t[MeV/c/u]\n".format(
-            self.get_relativistic_momentum_per_u())
-
-        s += "pc:\t\t{}\t[MeV]\n".format(self.get_pc())
-
-        s += "Brho:\t\t{}\t[T/m]\n".format(self.get_magnetic_rigidity())
-        s += "Erho:\t\t{}\t[MJ/C]\n".format(self.get_electric_rigidity())
-
-        s += "f_rev:\t\t{}\t[MHz]\n".format(
-            self.get_revolution_frequency())
-        s += "No. of ions:\t\t{}\n".format(
-            self.get_number_of_ions(self.get_revolution_frequency()))
-
-        s += "Prev. Harmonic:\t{}\n".format(
-            self.get_prev_revolution_harmonic(self.get_revolution_frequency()))
-        s += "Expected peak freq.:\t{}\t[MHz]\n".format(
-            self.get_prev_peak_frequency(self.get_revolution_frequency()))
-        s += "Next Harmonic:\t{}\n".format(
-            self.get_next_revolution_harmonic(self.get_revolution_frequency()))
-        s += "Expected peak freq.:\t{}\t[MHz]\n".format(
-            self.get_next_peak_frequency(self.get_revolution_frequency()))
-
+    @staticmethod
+    def convert_table_to_str(tbl):
+        s = ''
+        for line in tbl:
+            for element in line:
+                s += str(element)
+                s += ' '
+            s += '\n'
         return s
 
     def calculate_from_energy_list(self):
