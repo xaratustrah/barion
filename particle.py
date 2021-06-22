@@ -10,6 +10,7 @@ Mar 2016 Xaratustrah
 
 from amedata import AMEData
 import math
+import numpy as np
 
 
 class Particle(object):
@@ -291,6 +292,10 @@ class Particle(object):
     def get_revolution_frequency_from_harmonic(harmonic, measured_freq):
         return measured_freq / harmonic
 
+    @staticmethod
+    def get_harmonic_frequency_from_f_rev(harmonic, f_rev):
+        return f_rev * harmonic
+
     def get_number_of_ions(self, f_rev):
         return int(self.i_beam_uA / 1.0e6 / f_rev / 1.0e6 / self.get_total_charge_in_coulomb())
 
@@ -390,6 +395,12 @@ class Particle(object):
         moq_unknown = self.get_ionic_moq_in_u() - delta_moq
         return moq_unknown
 
+    def get_unknown_rev_freq_from_moq(self, frev_p_ref, moq_unknown):
+        alpha_p = self.ring.get_alpha_p()
+        delta_moq = self.get_ionic_moq_in_u() - moq_unknown
+        delta_f = -alpha_p * delta_moq / self.get_ionic_moq_in_u() * frev_p_ref
+        return frev_p_ref - delta_f
+
     def identify(self, f_p_ref, f_p_unknown, zz_range, nn_range, ee_max, accuracy):
         moq_unknown = self.get_moq_unknown_from_freq(f_p_ref, f_p_unknown)
         moq_dict = {}
@@ -415,3 +426,38 @@ class Particle(object):
                 break
             accuracy += 1e-6
         return s[0]
+
+    # --------------------------------
+
+    def get_nuclides_freqs(self, p_ref_f_rev_measured, harmonic, region_set):
+        freqs_sim = np.array([])
+        freqs_sim_dic = {}
+
+        for pp in region_set:
+            pp.ke_amev = self.ke_amev
+            pp.path_length_m = self.path_length_m
+
+            # following command assumes gamma_t set in the p_ref.ring.gamma_t
+            ff = self.get_unknown_rev_freq_from_moq(
+                p_ref_f_rev_measured, pp.get_ionic_moq_in_u())
+
+            ff_at_harm = Particle.get_harmonic_frequency_from_f_rev(
+                harmonic, ff)
+            freqs_sim = np.append(freqs_sim, ff_at_harm)
+            freqs_sim_dic[ff_at_harm] = pp
+
+        freqs_sim.sort()
+        freqs_sim = np.flip(freqs_sim)
+        return freqs_sim, freqs_sim_dic
+
+    @staticmethod
+    def get_xisqaure_array(muster, probe):
+        xisqu_array = np.array([])
+        for i in range(len(muster)):
+            xisqu = 0
+            for j in range(len(probe)):
+                xisqu += (muster[j] - probe[j])**2
+            xisqu_array = np.append(xisqu_array, xisqu)
+            muster = np.roll(muster, -1)
+            muster[-1] = 0
+        return xisqu_array
