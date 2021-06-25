@@ -449,15 +449,3 @@ class Particle(object):
         freqs_sim.sort()
         freqs_sim = np.flip(freqs_sim)
         return freqs_sim, freqs_sim_dic
-
-    @staticmethod
-    def get_xisqaure_array(muster, probe):
-        xisqu_array = np.array([])
-        for i in range(len(muster)):
-            xisqu = 0
-            for j in range(len(probe)):
-                xisqu += (muster[j] - probe[j])**2
-            xisqu_array = np.append(xisqu_array, xisqu)
-            muster = np.roll(muster, -1)
-            muster[-1] = 0
-        return xisqu_array
