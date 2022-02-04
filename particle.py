@@ -401,7 +401,7 @@ class Particle(object):
         delta_f = -alpha_p * delta_moq / self.get_ionic_moq_in_u() * frev_p_ref
         return frev_p_ref - delta_f
 
-    def identify(self, f_p_ref, f_p_unknown, zz_range, nn_range, ee_max, accuracy):
+    def identify_range(self, f_p_ref, f_p_unknown, zz_range, nn_range, ee_max, accuracy):
         moq_unknown = self.get_moq_unknown_from_freq(f_p_ref, f_p_unknown)
         moq_dict = {}
         for i in self.ame_data.ame_table:
@@ -417,11 +417,33 @@ class Particle(object):
             candidates.remove(str(self))
         return candidates
 
-    def identify_search(self, f_p_ref, f_p_unknown, zz_range, nn_range, ee_max):
+    def identify_search_range(self, f_p_ref, f_p_unknown, zz_range, nn_range, ee_max):
         accuracy = 1e-6
         while True:
-            s = self.identify(
+            s = self.identify_range(
                 f_p_ref, f_p_unknown, zz_range, nn_range, ee_max, accuracy)
+            if s:
+                break
+            accuracy += 1e-6
+        return s[0]
+
+    def identify_region(self, f_p_ref, f_p_unknown, region, accuracy):
+        moq_unknown = self.get_moq_unknown_from_freq(f_p_ref, f_p_unknown)
+        moq_dict = {}
+        for p in region:
+            moq_dict[str(p)] = p.get_ionic_moq_in_u()
+
+        candidates = [k for (k, v) in moq_dict.items()
+                      if abs(v - moq_unknown) <= accuracy]
+        if str(self) in candidates:
+            candidates.remove(str(self))
+        return candidates
+
+    def identify_search_region(self, f_p_ref, f_p_unknown, region):
+        accuracy = 1e-6
+        while True:
+            s = self.identify_region(
+                f_p_ref, f_p_unknown, region, accuracy)
             if s:
                 break
             accuracy += 1e-6
