@@ -2,17 +2,10 @@
 
 from setuptools import setup, find_packages
 from barion.version import __version__
+from pathlib import Path
 
-long_description = ''
-
-try:
-    import pypandoc
-
-    long_description = pypandoc.convert('README.md', 'rst')
-except(IOError, ImportError):
-    long_description = open('README.md').read()
-
-print(long_description)
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text()
 
 classifiers = [
     'Environment :: X11 Applications :: Qt',
@@ -28,8 +21,9 @@ setup(
     name='barion',
     packages=find_packages(),
     version=__version__,
-    description='A qt-based GUI program that offers a graphical interface to visually inspect the data processed by the iqtools library.',
+    description='A set of classes and a GUI for accessing information and perform calculations related to (relativistic or non-relativistic) ions and nuclei in accelerator storage rings.',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     author='xaratustrah',
     url='https://github.com/xaratustrah/barion',  # use the URL to the github repo
     download_url='https://github.com/xaratustrah/barion/tarball/{}'.format(
