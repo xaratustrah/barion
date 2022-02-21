@@ -1,9 +1,11 @@
 """
 Barion
 
+-- GUI Application --
 
-Okt 2016 Xaratustrah
-
+Jul 2015 Xaratustrah
+Mar 2016 Xaratustrah
+Feb 2022 Xaratustrah
 
 """
 
@@ -24,7 +26,8 @@ class ChartPlot:
         self.font_size = 6
 
     def bulk_plot(self, particle_array):
-        fig1 = plt.figure(num=None, figsize=(8, 6), dpi=150, facecolor='w', edgecolor='k')
+        fig1 = plt.figure(num=None, figsize=(8, 6), dpi=150,
+                          facecolor='w', edgecolor='k')
         ax1 = plt.subplot(111, aspect='equal')
 
         # set to dummy large number for later adjustment
