@@ -8,7 +8,7 @@ Mar 2016 Xaratustrah
 
 """
 
-from amedata import AMEData
+from .amedata import AMEData
 import math
 import numpy as np
 

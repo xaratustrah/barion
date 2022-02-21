@@ -12,13 +12,16 @@ Mar 2016 Xaratustrah
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QFileDialog, QDialog, QTableWidgetItem
 from PyQt5.QtGui import QKeyEvent, QStandardItemModel, QStandardItem
 from PyQt5.QtCore import Qt, QCoreApplication
-from mainwindow_ui import Ui_MainWindow
-from ui_interface import UI_Interface
-from aboutdialog_ui import Ui_AbooutDialog
-from particle import Particle
-from amedata import AMEData
-from ring import Ring
-from version import __version__
+
+from .mainwindow_ui import Ui_MainWindow
+from .ui_interface import UI_Interface
+from .aboutdialog_ui import Ui_AbooutDialog
+
+from . particle import Particle
+from .amedata import AMEData
+from .ring import Ring
+from .version import __version__
+
 import os
 
 

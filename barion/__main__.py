@@ -12,7 +12,8 @@ Mar 2016 Xaratustrah
 
 import sys
 from PyQt5.QtWidgets import QApplication
-from mainwindow import mainWindow
+from . mainwindow import mainWindow
+
 
 def main():
     """
