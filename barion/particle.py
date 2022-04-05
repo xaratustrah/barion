@@ -388,12 +388,12 @@ class Particle(object):
 
         return s
 
-    def get_moq_unknown_from_freq(self, frev_p_ref, frev_p_unknown):
+    def get_unknown_moq_from_freq(self, frev_p_ref, frev_p_unknown):
         alpha_p = self.ring.get_alpha_p()
         delta_f = frev_p_ref - frev_p_unknown
         delta_moq = - delta_f / frev_p_ref * self.get_ionic_moq_in_u() / alpha_p
-        moq_unknown = self.get_ionic_moq_in_u() - delta_moq
-        return moq_unknown
+        unknown_moq = self.get_ionic_moq_in_u() - delta_moq
+        return unknown_moq
 
     def get_unknown_rev_freq_from_moq(self, frev_p_ref, moq_unknown):
         alpha_p = self.ring.get_alpha_p()
