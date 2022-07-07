@@ -1,7 +1,7 @@
 # barion
 <sup> (c) Copyright M. Shahab SANJARI 2015-2022 </sup>
 
-![barion](https://raw.githubusercontent.com/xaratustrah/barion/master/rsrc/screenshot.png)
+![barion](https://raw.githubusercontent.com/xaratustrah/barion/master/barion/rsrc/screenshot.png)
 
 ## About
 
@@ -15,7 +15,7 @@
 - Create nuclidic chart plots
 - and many more...
 
-![barion_chart](https://raw.githubusercontent.com/xaratustrah/barion/master/rsrc/barion_chart.png)
+![barion_chart](https://raw.githubusercontent.com/xaratustrah/barion/master/barion/rsrc/barion_chart.png)
 
 ## License
 
@@ -50,7 +50,7 @@ Binary releases are available in the release section.
 
 ### Build / Run Prerequisites
 
-**barion** is writen in Python 3.4 so it needs a standard working environment such as Linux,
+**barion** is writen in Python 3 so it needs a standard working environment such as Linux,
 OSX or Windows. More general info on python installation under Win and OSX can be found on this [gist](https://gist.github.com/xaratustrah/4efc5001f1bbcce47e02e2343ba29b87). It should work out of the box
 with standard linux installations. **barion** needs the library **fortranformat** which can
 be installed using **pip** pacakge manager.
