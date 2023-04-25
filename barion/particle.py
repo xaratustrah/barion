@@ -120,6 +120,7 @@ class Particle(object):
             if zz_min <= i[4] <= zz_max:
                 if nn_min <= i[3] <= nn_max:
                     for eee in range(ee_max):
+                        if eee == i[4]: break
                         # create particle
                         p = Particle(i[4], i[3], self.ame_data, self.ring)
                         p.qq = i[4] - eee
