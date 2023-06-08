@@ -6,6 +6,7 @@ Barion
 Jul 2015 Xaratustrah
 Mar 2016 Xaratustrah
 Feb 2022 Xaratustrah
+Jun 2023 DFreireF
 
 """
 
@@ -13,7 +14,6 @@ import fortranformat as ff
 import urllib.request as ur
 import os
 import re
-
 
 class AMEData(object):
     """
@@ -101,11 +101,6 @@ class AMEData(object):
                 self.check_for_database()  # recursive call!
 
         else:
-            if self.ui_interface:
-                self.ui_interface.show_message(
-                    'AME Database files are available.')
-            else:
-                print('AME Database files are available.')
             self.init_ame_db()
             self.init_nubase_db()
 
