@@ -104,8 +104,6 @@ class AMEData(object):
             if self.ui_interface:
                 self.ui_interface.show_message(
                     'AME Database files are available.')
-            else:
-                print('AME Database files are available.')
             self.init_ame_db()
             self.init_nubase_db()
 
