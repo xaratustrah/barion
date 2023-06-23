@@ -1,5 +1,5 @@
 # barion
-<sup> (c) Copyright M. Shahab SANJARI 2015-2022 </sup>
+<sup> (c) Copyright Shahab SANJARI 2015-2023 </sup>
 
 ![barion](https://raw.githubusercontent.com/xaratustrah/barion/master/barion/rsrc/screenshot.png)
 
